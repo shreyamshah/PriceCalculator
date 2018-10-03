@@ -1,0 +1,44 @@
+﻿using PriceCalculator.Data;
+using Prism.Commands;
+using Prism.Mvvm;
+using Prism.Navigation;
+using Prism.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PriceCalculator.ViewModels
+{
+	public class ItemAddPageViewModel : ViewModelBase
+	{
+        public ItemAddPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService, dialogService)
+        {
+            UnitList = new List<string>() { "kg", "grams", "gruss", "piece","dozen" };
+            Item = new Item();
+            SaveItem = new DelegateCommand(SaveItemAsync);
+        }
+
+        private List<string> unitList;
+        public List<string> UnitList
+        {
+            get { return unitList; }
+            set { SetProperty(ref unitList, value); }
+        }
+
+        private Item item;
+        public Item Item
+        {
+            get { return item; }
+            set { SetProperty(ref item, value); }
+        }
+
+        public void SaveItemAsync()
+        {
+            App.DbHelper.SaveItem(Item);
+            NavigationService.GoBackAsync();
+        }
+
+        public DelegateCommand SaveItem { get; set; }
+    }
+}

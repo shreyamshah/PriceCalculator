@@ -1,0 +1,324 @@
+<resources xmlns:custom="http://schemas.android.com/apk/res/com.grapecity.xuni.flexchart">
+
+    <!-- BEGIN duplicate fields for FlexChartCore -->
+
+     <attr name="flexChart_headerFontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+    <attr name="flexChart_headerFontGravity" format="enum">
+        <enum name="LEFT" value="3" />
+        <enum name="CENTER_HORIZONTAL" value="1" />
+        <enum name="RIGHT" value="5" />
+    </attr>
+    <attr name="flexChart_footerFontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+    <attr name="flexChart_footerFontGravity" format="enum">
+        <enum name="LEFT" value="3" />
+        <enum name="CENTER_HORIZONTAL" value="1" />
+        <enum name="RIGHT" value="5" />
+    </attr>
+
+    <attr name="flexChart_legend_FontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+     <attr name="flexChart_datalabel_FontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+
+    <!-- END duplicate fields for FlexChartCore -->
+
+    <attr name="flexChart_chartType" format="enum">
+        <enum name="COLUMN" value="0" />
+        <enum name="BAR" value="1" />
+        <enum name="SCATTER" value="2" />
+        <enum name="LINE" value="3" />
+        <enum name="LINESYMBOLS" value="4" />
+        <enum name="AREA" value="5" />
+        <enum name="BUBBLE" value="6" />
+        <enum name="CANDLE" value="7" />
+        <enum name="HLOC" value="8" />
+        <enum name="SPLINE" value="9" />
+        <enum name="SPLINESYMBOLS" value="10" />
+        <enum name="SPLINEAREA" value="11" />
+    </attr>
+    <attr name="flexChart_stackingType" format="enum">
+        <enum name="NONE" value="0" />
+        <enum name="STACKED" value="1" />
+        <enum name="STACKED100pc" value="2" />
+    </attr>
+    <attr name="flexChart_axisX_labelFontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+    <attr name="flexChart_axisX_titleFontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+    <attr name="flexChart_axisX_labelsVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisX_axisLineVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisX_majorTickOverlap" format="enum">
+        <enum name="NONE" value="0" />
+        <enum name="OUTSIDE" value="1" />
+        <enum name="INSIDE" value="2" />
+    </attr>
+    <attr name="flexChart_axisX_majorGridVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+        <attr name="flexChart_axisX_minorTickOverlap" format="enum">
+        <enum name="NONE" value="0" />
+        <enum name="OUTSIDE" value="1" />
+        <enum name="INSIDE" value="2" />
+    </attr>
+    <attr name="flexChart_axisX_minorGridVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisY_labelFontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+    <attr name="flexChart_axisY_titleFontWeight" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="BOLD" value="1" />
+        <enum name="ITALIC" value="2" />
+        <enum name="BOLD_ITALIC" value="3" />
+    </attr>
+    <attr name="flexChart_axisY_labelsVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisY_axisLineVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisY_majorGridVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisY_majorTickOverlap" format="enum">
+        <enum name="NONE" value="0" />
+        <enum name="OUTSIDE" value="1" />
+        <enum name="INSIDE" value="2" />
+    </attr>
+        <attr name="flexChart_axisY_minorGridVisible" format="enum">
+        <enum name="FALSE" value="0" />
+        <enum name="TRUE" value="1" />
+    </attr>
+    <attr name="flexChart_axisY_minorTickOverlap" format="enum">
+        <enum name="NONE" value="0" />
+        <enum name="OUTSIDE" value="1" />
+        <enum name="INSIDE" value="2" />
+    </attr>
+
+    <attr name="flexChartSeries_chartType" format="enum">
+        <enum name="COLUMN" value="0" />
+        <enum name="BAR" value="1" />
+        <enum name="SCATTER" value="2" />
+        <enum name="LINE" value="3" />
+        <enum name="LINESYMBOLS" value="4" />
+        <enum name="AREA" value="5" />
+        <enum name="BUBBLE" value="6" />
+        <enum name="CANDLE" value="7" />
+        <enum name="HLOC" value="8" />
+    </attr>
+     <attr name="flexChartSeries_visibility" format="enum">
+        <enum name="VISIBLE" value="0" />
+        <enum name="PLOT" value="1" />
+        <enum name="LEGEND" value="2" />
+        <enum name="HIDDEN" value="3" />
+    </attr>
+
+    <declare-styleable name="FlexChart">
+
+        <!-- BEGIN duplicate fields for FlexChartCore -->
+
+        <attr name="flexChart_palette" format="reference" />
+        <attr name="flexChart_header" format="string" />
+        <attr name="flexChart_headerFontSize" format="float" />
+        <attr name="flexChart_headerFontTypeface" format="string" />
+        <attr name="flexChart_headerFontWeight" />
+        <attr name="flexChart_headerFontGravity" />
+        <attr name="flexChart_headerFontColor" format="color" />
+        <attr name="flexChart_footer" format="string" />
+        <attr name="flexChart_footerFontSize" format="float" />
+        <attr name="flexChart_footerFontTypeface" format="string" />
+        <attr name="flexChart_footerFontWeight" />
+        <attr name="flexChart_footerFontGravity" />
+        <attr name="flexChart_footerFontColor" format="color" />
+        <attr name="flexChart_backgroundColor" format="color" />
+        <attr name="flexChart_borderColor" format="color" />
+        <attr name="flexChart_borderWidth" format="float" />
+        <attr name="flexChart_plotAreabackgroundColor" format="color" />
+        <attr name="flexChart_selectedBorderColor" format="color" />
+        <attr name="flexChart_selectedBorderWidth" format="float" />
+
+        <attr name="flexChart_legend_backgroundColor" format="color" />
+        <attr name="flexChart_legend_borderColor" format="color" />
+        <attr name="flexChart_legend_borderWidth" format="float" />
+        <attr name="flexChart_legend_FontColor" format="color" />
+        <attr name="flexChart_legend_FontSize" format="float" />
+        <attr name="flexChart_legend_FontTypeface" format="string" />
+        <attr name="flexChart_legend_FontWeight" />
+        <attr name="flexChart_legend_orientation" format="enum">
+	        <enum name="ALL" value="0" />
+	        <enum name="HORIZONTAL" value="1" />
+	        <enum name="VERTICAL" value="2" />
+		 </attr>
+		 <attr name="flexChart_legend_position" format="enum">
+	        <enum name="NONE" value="0" />
+	        <enum name="LEFT" value="1" />
+	        <enum name="TOP" value="2" />
+	        <enum name="RIGHT" value="3" />
+	        <enum name="BOTTOM" value="4" />
+	        <enum name="AUTO" value="5" />
+		 </attr>
+        <!-- END duplicate fields for FlexChartCore -->
+
+        <attr name="flexChart_chartType" />
+        <attr name="flexChart_stackingType" />
+        <attr name="flexChart_chartOptions_bubbleMinSize" format="float" />
+		<attr name="flexChart_chartOptions_bubbleMaxSize" format="float" />
+		<attr name="flexChart_chartOptions_groupWidth" format="float" />
+
+		<attr name="flexChart_binding" format="string" />
+		<attr name="flexChart_animated" format="boolean" />
+
+		<attr name="flexChart_zoomMode" format="enum">
+	        <enum name="DISABLED" value="0" />
+	        <enum name="X" value="1" />
+	        <enum name="Y" value="2" />
+	        <enum name="XY" value="3" />
+		</attr>
+
+		<attr name="flexChart_toggleLegend" format="boolean" />
+		<attr name="flexChart_loadAnimation_loadAnimationMode" format="enum">
+	        <enum name="ALL" value="0" />
+	        <enum name="POINT" value="1" />
+	        <enum name="SERIES" value="2" />
+		</attr>
+		<attr name="flexChart_loadAnimation_duration" format="integer" />
+		<attr name="flexChart_loadAnimation_startDelay" format="integer" />
+		<attr name="flexChart_updateAnimation_duration" format="integer" />
+		<attr name="flexChart_updateAnimation_startDelay" format="integer" />
+
+        <attr name="flexChart_axisX_labelFontColor" format="color" />
+        <attr name="flexChart_axisX_labelFontSize" format="float" />
+        <attr name="flexChart_axisX_labelFontTypeface" format="string" />
+        <attr name="flexChart_axisX_labelFontWeight" />
+        <attr name="flexChart_axisX_labelAngle" format="float" />
+        <attr name="flexChart_axisX_labelsVisible" />
+        <attr name="flexChart_axisX_axisLineVisible" />
+        <attr name="flexChart_axisX_titleFontColor" format="color" />
+        <attr name="flexChart_axisX_titleFontSize" format="float" />
+        <attr name="flexChart_axisX_titleFontTypeface" format="string" />
+        <attr name="flexChart_axisX_titleFontWeight" />
+        <attr name="flexChart_axisX_lineColor" format="color" />
+        <attr name="flexChart_axisX_lineWidth" format="float" />
+        <attr name="flexChart_axisX_majorGridColor" format="color" />
+        <attr name="flexChart_axisX_majorGridWidth" format="float" />
+        <attr name="flexChart_axisX_majorTickColor" format="color" />
+        <attr name="flexChart_axisX_majorTickWidth" format="float" />
+        <attr name="flexChart_axisX_majorGridVisible" />
+		<attr name="flexChart_axisX_majorTickOverlap" />
+		<attr name="flexChart_axisX_majorGridFill" format="color" />
+		<attr name="flexChart_axisX_minorGridColor" format="color" />
+        <attr name="flexChart_axisX_minorGridWidth" format="float" />
+        <attr name="flexChart_axisX_minorTickColor" format="color" />
+        <attr name="flexChart_axisX_minorTickWidth" format="float" />
+        <attr name="flexChart_axisX_minorGridVisible" />
+		<attr name="flexChart_axisX_minorTickOverlap" />
+		<attr name="flexChart_axisX_minorGridFill" format="color" />
+		<attr name="flexChart_axisX_format" format="string" />
+		<attr name="flexChart_axisX_origin" format="float" />
+		<attr name="flexChart_axisX_majorUnit" format="float" />
+		<attr name="flexChart_axisX_minorUnit" format="float" />
+		<attr name="flexChart_axisX_title" format="string" />
+		<attr name="flexChart_axisX_name" format="string" />
+		<attr name="flexChart_axisX_logBase" format="float" />
+		<attr name="flexChart_axisX_overlappingLabels" format="enum">
+	        <enum name="Auto" value="0" />
+	        <enum name="Show" value="1" />
+		</attr>
+
+		<attr name="flexChart_axisY_format" format="string" />
+        <attr name="flexChart_axisY_labelFontColor" format="color" />
+        <attr name="flexChart_axisY_labelFontSize" format="float" />
+        <attr name="flexChart_axisY_labelFontTypeface" format="string" />
+        <attr name="flexChart_axisY_labelFontWeight" />
+        <attr name="flexChart_axisY_labelAngle" format="float" />
+        <attr name="flexChart_axisY_labelsVisible" />
+        <attr name="flexChart_axisY_axisLineVisible" />
+        <attr name="flexChart_axisY_titleFontColor" format="color" />
+        <attr name="flexChart_axisY_titleFontSize" format="float" />
+        <attr name="flexChart_axisY_titleFontTypeface" format="string" />
+        <attr name="flexChart_axisY_titleFontWeight" />
+        <attr name="flexChart_axisY_lineColor" format="color" />
+        <attr name="flexChart_axisY_lineWidth" format="float" />
+        <attr name="flexChart_axisY_majorGridColor" format="color" />
+        <attr name="flexChart_axisY_majorGridWidth" format="float" />
+        <attr name="flexChart_axisY_majorTickColor" format="color" />
+        <attr name="flexChart_axisY_majorTickWidth" format="float" />
+        <attr name="flexChart_axisY_majorGridVisible" />
+		<attr name="flexChart_axisY_majorTickOverlap" />
+		<attr name="flexChart_axisY_majorGridFill" format="color" />
+		<attr name="flexChart_axisY_minorGridColor" format="color" />
+        <attr name="flexChart_axisY_minorGridWidth" format="float" />
+        <attr name="flexChart_axisY_minorTickColor" format="color" />
+        <attr name="flexChart_axisY_minorTickWidth" format="float" />
+        <attr name="flexChart_axisY_minorGridVisible" />
+		<attr name="flexChart_axisY_minorTickOverlap" />
+		<attr name="flexChart_axisY_minorGridFill" format="color" />
+		<attr name="flexChart_axisY_origin" format="float" />
+		<attr name="flexChart_axisY_majorUnit" format="float" />
+		<attr name="flexChart_axisY_minorUnit" format="float" />
+		<attr name="flexChart_axisY_title" format="string" />
+		<attr name="flexChart_axisY_name" format="string" />
+		<attr name="flexChart_axisY_logBase" format="float" />
+		<attr name="flexChart_axisY_overlappingLabels" format="enum">
+	        <enum name="Auto" value="0" />
+	        <enum name="Show" value="1" />
+   		</attr>
+
+		<attr name="flexChart_datalabel_position" format="enum">
+	        <enum name="NONE" value="0" />
+	        <enum name="CENTER" value="1" />
+	        <enum name="LEFT" value="2" />
+	        <enum name="RIGHT" value="3" />
+	        <enum name="TOP" value="4" />
+	        <enum name="BOTTOM" value="5" />
+		</attr>
+		<attr name="flexChart_datalabel_backgroundColor" format="color" />
+		<attr name="flexChart_datalabel_borderColor" format="color" />
+		<attr name="flexChart_datalabel_FontColor" format="color" />
+		<attr name="flexChart_datalabel_borderWidth" format="float" />
+		<attr name="flexChart_datalabel_FontSize" format="float" />
+		<attr name="flexChart_datalabel_FontTypeface" format="string" />
+		<attr name="flexChart_datalabel_FontWeight" />
+    </declare-styleable>
+</resources>

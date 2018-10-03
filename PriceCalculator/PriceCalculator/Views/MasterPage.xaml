@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+                  xmlns:views="clr-namespace:PriceCalculator.Views;assembly=PriceCalculator"
+                  prism:ViewModelLocator.AutowireViewModel="True" Icon="hamburger.png"
+                  x:Class="PriceCalculator.Views.MasterPage">
+
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu" Icon="hamburger.png" >
+            <!-- TODO: // Update the Layout and add some real menu items  
+                <Button Text="ViewA" Command="{Binding NavigateCommand}" CommandParameter="ViewA" /> -->
+            <StackLayout>
+                <Button Image="ic_launcher.png" Text="Home" Command="{Binding NavigateCommand}" CommandParameter="NavigationPage/MainPage"/>
+                <Button Image="addimage.png" Text="Settings" Command="{Binding NavigateCommand}" CommandParameter="NavigationPage/SettingsPage"/>
+            </StackLayout>
+
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>

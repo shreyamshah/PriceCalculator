@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+     All color get from theme.
+	<color name="defaultFlexChartAxisX_labelFontColor" format="color" type="color">#000000</color>
+	<color name="defaultFlexChartAxisX_titleFontColor" format="color" type="color">#000000</color>
+	<color name="defaultFlexChartAxisX_lineColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisX_majorGridColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisX_majorTickColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisX_minorGridColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisX_minorTickColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisX_majorGridFill" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartAxisX_minorGridFill" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartAxisY_labelFontColor" format="color" type="color">#000000</color>
+	<color name="defaultFlexChartAxisY_titleFontColor" format="color" type="color">#000000</color>
+	<color name="defaultFlexChartAxisY_lineColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisY_majorGridColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisY_majorTickColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisY_minorGridColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisY_minorTickColor" format="color" type="color">#AAAAAA</color>
+	<color name="defaultFlexChartAxisY_majorGridFill" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartAxisY_minorGridFill" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartSeriesColor" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartSeriesBorderColor" format="color" type="color">@android:color/transparent</color>
+	<color name="defaultFlexChartSeriesSymbolColor" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartSeriesSymbolBorderColor" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartHeaderFontColor" format="color" type="color">#000000</color>
+	<color name="defaultFlexChartFooterFontColor" format="color" type="color">#000000</color>
+    <color name="defaultFlexChartBackgroundColor" format="color" type="color">#FFFFFF</color>
+    <color name="defaultFlexChartBorderColor" format="color" type="color">#FFFFFF</color>
+	<color name="defaultFlexChartPlotAreabackgroundColor" format="color" type="color">@android:color/transparent</color>
+    <color name="defaultFlexChartSelectedBorderColor" format="color" type="color">@android:color/transparent</color>
+	<color name="defaultFlexChartLegend_borderColor" format="color" type="color">#FFFFFF</color>
+    -->
+
+
+    
+
+
+
+    <string-array name="flexChartDefaultFlexChartPalette">
+        <item>#88bde6</item>
+        <item>#fbb258</item>
+        <item>#90cd97</item>
+        <item>#f6aac9</item>
+        <item>#bfa554</item>
+        <item>#bc99c7</item>
+        <item>#eddd46</item>
+        <item>#f07e6e</item>
+        <item>#8c8c8c</item>
+    </string-array>
+    <string-array name="flexChartCocoaPalette">
+        <item>#466bb0</item>
+        <item>#c8b422</item>
+        <item>#14886e</item>
+        <item>#b54836</item>
+        <item>#6e5944</item>
+        <item>#8b3872</item>
+        <item>#73b22b</item>
+        <item>#b87320</item>
+        <item>#3B3B3B</item>
+    </string-array>
+    <string-array name="flexChartCoralPalette">
+        <item>#84d0e0</item>
+        <item>#f48256</item>
+        <item>#95c78c</item>
+        <item>#efa5d6</item>
+        <item>#ba8452</item>
+        <item>#ab95c2</item>
+        <item>#ede9d0</item>
+        <item>#e96b7d</item>
+        <item>#888888</item>
+    </string-array>
+    <string-array name="flexChartDarkPalette">
+        <item>#005fad</item>
+        <item>#f06400</item>
+        <item>#009330</item>
+        <item>#e400b1</item>
+        <item>#b65800</item>
+        <item>#6a279c</item>
+        <item>#d5a211</item>
+        <item>#dc0127</item>
+        <item>#323232</item>
+    </string-array>
+    <string-array name="flexChartHighConstrastPalette">
+        <item>#ff82b0</item>
+        <item>#0dda2c</item>
+        <item>#0021ab</item>
+        <item>#bcf28c</item>
+        <item>#19c23b</item>
+        <item>#890d3a</item>
+        <item>#607efd</item>
+        <item>#1b7700</item>
+        <item>#363636</item>
+    </string-array>
+    <string-array name="flexChartLightPalette">
+        <item>#ddca9a</item>
+        <item>#778deb</item>
+        <item>#cb9fbb</item>
+        <item>#b5eae2</item>
+        <item>#7270be</item>
+        <item>#a6c7a7</item>
+        <item>#9e95c7</item>
+        <item>#95b0c7</item>
+        <item>#9b9b9b</item>
+    </string-array>
+    <string-array name="flexChartMidnightPalette">
+        <item>#83aaca</item>
+        <item>#e37849</item>
+        <item>#14a46a</item>
+        <item>#e097da</item>
+        <item>#a26d54</item>
+        <item>#a584b7</item>
+        <item>#d89c54</item>
+        <item>#e86996</item>
+        <item>#54606D</item>
+    </string-array>
+    <string-array name="flexChartMinimalPalette">
+        <item>#92b8da</item>
+        <item>#e2d287</item>
+        <item>#accdb8</item>
+        <item>#eac4cb</item>
+        <item>#bbbb7a</item>
+        <item>#cab1ca</item>
+        <item>#cbd877</item>
+        <item>#dfb397</item>
+        <item>#c8c8c8</item>
+    </string-array>
+    <string-array name="flexChartModernPalette">
+        <item>#2d9fc7</item>
+        <item>#ec993c</item>
+        <item>#89c235</item>
+        <item>#e377a4</item>
+        <item>#a68931</item>
+        <item>#a672a6</item>
+        <item>#d0c041</item>
+        <item>#e35855</item>
+        <item>#68706a</item>
+    </string-array>
+    <string-array name="flexChartOrganicPalette">
+        <item>#9c88d9</item>
+        <item>#a3d767</item>
+        <item>#8ec3c0</item>
+        <item>#e9c3a9</item>
+        <item>#91ab36</item>
+        <item>#d4ccc0</item>
+        <item>#61bbd8</item>
+        <item>#e2d76f</item>
+        <item>#80715a</item>
+    </string-array>
+    <string-array name="flexChartSlatePalette">
+        <item>#7493cd</item>
+        <item>#f99820</item>
+        <item>#71b486</item>
+        <item>#e4a491</item>
+        <item>#cb883b</item>
+        <item>#ae83a4</item>
+        <item>#bacc5c</item>
+        <item>#e5746a</item>
+        <item>#505d65</item>
+    </string-array>
+    <string-array name="flexChartCyborgPalette">
+        <item>#2a9fd6</item>
+        <item>#77b300</item>
+        <item>#9933cc</item>
+        <item>#ff8800</item>
+        <item>#cc0000</item>
+        <item>#00cca3</item>
+        <item>#3d6dcc</item>
+        <item>#525252</item>
+        <item>#323232</item>
+    </string-array>
+    <string-array name="flexChartSuperheroPalette">
+        <item>#5cb85c</item>
+        <item>#f0ad4e</item>
+        <item>#5bc0de</item>
+        <item>#d9534f</item>
+        <item>#9f5bde</item>
+        <item>#46db8c</item>
+        <item>#b6b86e</item>
+        <item>#4e5d6c</item>
+        <item>#2b3e4b</item>
+    </string-array>
+    <string-array name="flexChartFlatlyPalette">
+        <item>#18bc9c</item>
+        <item>#3498db</item>
+        <item>#f39c12</item>
+        <item>#6cc1be</item>
+        <item>#99a549</item>
+        <item>#8f54b5</item>
+        <item>#e74c3c</item>
+        <item>#8a9899</item>
+        <item>#2c3e50</item>
+    </string-array>
+    <string-array name="flexChartDarklyPalette">
+        <item>#375a7f</item>
+        <item>#00bc8c</item>
+        <item>#3498db</item>
+        <item>#f39c12</item>
+        <item>#e74c3c</item>
+        <item>#8f61b3</item>
+        <item>#b08725</item>
+        <item>#4a4949</item>
+        <item>#323232</item>
+    </string-array>
+    <string-array name="flexChartCerulanPalette">
+        <item>#033e76</item>
+        <item>#87c048</item>
+        <item>#59822c</item>
+        <item>#53b3eb</item>
+        <item>#fc6506</item>
+        <item>#d42323</item>
+        <item>#e3bb00</item>
+        <item>#cccccc</item>
+        <item>#474747</item>
+    </string-array>
+    <string-array name="flexChartMaterialPalette">
+        <item>#009085</item>
+        <item>#189FF1</item>
+        <item>#924597</item>
+        <item>#83C248</item>
+        <item>#FE5512</item>
+        <item>#FBC105</item>
+        <item>#D3994F</item>
+        <item>#90A0A1</item>
+        <item>#474747</item>
+    </string-array>
+
+</resources>

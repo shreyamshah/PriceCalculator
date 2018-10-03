@@ -1,0 +1,4 @@
+int drawable dct 0x7f020000
+int id tooltipContent 0x7f040001
+int id tooltipTitle 0x7f040000
+int layout tooltip 0x7f030000
