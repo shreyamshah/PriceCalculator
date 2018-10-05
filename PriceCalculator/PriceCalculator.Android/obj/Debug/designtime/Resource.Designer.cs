@@ -3144,6 +3144,9 @@ namespace PriceCalculator.Droid
 			// aapt resource value: 0x7F020065
 			public const int notify_panel_notification_icon_bg = 2130837605;
 			
+			// aapt resource value: 0x7F010005
+			public const int remove = 2130771973;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

@@ -7,18 +7,20 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddItemCommand}"/>
     </ContentPage.ToolbarItems>
-    <StackLayout>
-        <ListView ItemsSource="{Binding ItemsList}" Margin="10,10,0,0">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <StackLayout BindingContext="{Binding .}">
-                            <Label Text="{Binding Name}"/>
-                            <Label Text="{Binding Rate,StringFormat='{0:c}'}"/>
-                        </StackLayout>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </StackLayout>
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView ItemsSource="{Binding ItemsList}" Margin="10,10,0,0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout BindingContext="{Binding .}">
+                                <Label Text="{Binding Name}"/>
+                                <Label Text="{Binding Rate,StringFormat='{0:c}'}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

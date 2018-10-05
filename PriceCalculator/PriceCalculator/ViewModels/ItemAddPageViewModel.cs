@@ -33,10 +33,30 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref item, value); }
         }
 
-        public void SaveItemAsync()
+        public async void SaveItemAsync()
         {
+            string messages = "";
+            if(string.IsNullOrEmpty(Item.Name))
+            {
+                messages += "Enter name of the Item.\n";
+            }
+            if(Item.Rate==0)
+            {
+                messages += "Enter a valid rate.\n";
+            }
+            if(string.IsNullOrEmpty(Item.Unit))
+            {
+                messages += "Choose a Unit.";
+            }
+            if(!string.IsNullOrEmpty(messages))
+            {
+                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                return;
+            }
             App.DbHelper.SaveItem(Item);
-            NavigationService.GoBackAsync();
+            await DialogService.DisplayAlertAsync("Success", "Item saved SuccessFully", "Ok");
+            Xamarin.Forms.MessagingCenter.Send<Item>(Item, "added");
+            await NavigationService.GoBackAsync();
         }
 
         public DelegateCommand SaveItem { get; set; }

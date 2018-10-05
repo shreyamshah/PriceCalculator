@@ -1,10 +1,12 @@
 ﻿using PCLStorage;
+using PriceCalculator.Data;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -17,15 +19,39 @@ namespace PriceCalculator.ViewModels
         {
             Title = "Main Page";
             AddCommand = new DelegateCommand(Add);
+            GetAllProducts();
+            Xamarin.Forms.MessagingCenter.Subscribe<Product>(this, "added", OnProductAdded);
         }
 
         #region Property
         public DelegateCommand AddCommand { get; set; }
+
+        private ObservableCollection<Product> productsList;
+        public ObservableCollection<Product> ProductsList
+        {
+            get { return productsList; }
+            set { SetProperty(ref productsList, value); }
+        }
+
         #endregion
 
         public async void Add()
         {
             await NavigationService.NavigateAsync("PieceAddPage");
         }
+
+        public void GetAllProducts()
+        {
+            ProductsList = new ObservableCollection<Product>(App.DbHelper.GetAllProducts());
+        }
+
+        public void OnProductAdded(Product obj)
+        {
+            if(obj != null)
+            {
+                GetAllProducts();
+            }
+        }
+
     }
 }

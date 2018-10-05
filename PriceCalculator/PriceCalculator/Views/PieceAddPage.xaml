@@ -5,70 +5,87 @@
              xmlns:Behaviour="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True" x:Name="pieceAdd"
              x:Class="PriceCalculator.Views.PieceAddPage">
-    <StackLayout Margin="10,30,10,0">
-        <ScrollView>
-            <StackLayout BindingContext="{Binding Product}">
-                <Image Source="{Binding BindingContext.Image,Mode=TwoWay,Source={x:Reference Name=pieceAdd}}" HorizontalOptions="Center">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding BindingContext.OnImageTapped,Source={x:Reference Name=pieceAdd}}"/>
-                    </Image.GestureRecognizers>
-                </Image>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                    <Label Text="Name: " HeightRequest="30" VerticalTextAlignment="Center"/>
-                    <Entry Text="{Binding Name}" HeightRequest="40" HorizontalOptions="FillAndExpand"/>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveProductCommand}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Margin="10,30,10,0">
+            <ScrollView>
+                <StackLayout BindingContext="{Binding Product}">
+                    <Image Source="{Binding BindingContext.Image,Mode=TwoWay,Source={x:Reference Name=pieceAdd}}" HorizontalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BindingContext.OnImageTapped,Source={x:Reference Name=pieceAdd}}"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <Label Text="Name: " HeightRequest="30" VerticalTextAlignment="Center"/>
+                        <Entry Text="{Binding Name}" HeightRequest="40" HorizontalOptions="FillAndExpand"/>
+                    </StackLayout>
+                    <Button Text="+" Command="{Binding Path=BindingContext.AddNewItem ,Source={x:Reference Name=pieceAdd}}" FontSize="Large" HorizontalOptions="End"/>
+                    <ListView ItemsSource="{Binding ItemsUsed}" HasUnevenRows="True" HorizontalOptions="FillAndExpand" HeightRequest="160">
+                        <ListView.Header>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <Label Text="Type" VerticalTextAlignment="Center"/>
+                                <Label Text="Quantity" Grid.Column="1" Margin="10,0,0,0" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center"/>
+                                <Label Text="Unit" HorizontalOptions="FillAndExpand" Grid.Column="2" Margin="10,0,0,0" VerticalTextAlignment="Center"/>
+                                <Label Text="Total" Grid.Column="3" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid BindingContext="{Binding .}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50"/>
+                                        </Grid.RowDefinitions>
+                                        <Picker ItemsSource="{Binding BindingContext.ItemList, Source={x:Reference Name=pieceAdd}}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding ItemSelected}"/>
+                                        <Entry Text="{Binding Quantity}" Keyboard="Numeric" Grid.Column="1" Margin="10,0,0,0" HorizontalOptions="FillAndExpand"/>
+                                        <Picker ItemsSource="{Binding BindingContext.UnitList, Source={x:Reference Name=pieceAdd}}" SelectedItem="{Binding Unit}" HorizontalOptions="FillAndExpand" Grid.Column="2" Margin="10,0,0,0"/>
+                                        <Entry Text="{Binding Total}" Grid.Column="3" HorizontalOptions="FillAndExpand" IsEnabled="False">
+                                            <Entry.Behaviors>
+                                                <Behaviour:EventToCommandBehavior Command="{Binding BindingContext.AddTotalCommand, Source={x:Reference Name=pieceAdd}}" EventName="TextChanged" CommandParameter="NewTextValue"/>
+                                            </Entry.Behaviors>
+                                        </Entry>
+                                        <Image Source="remove.png" Grid.Column="4" WidthRequest="20" >
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding BindingContext.RemoveItemCommand, Source={x:Reference Name=pieceAdd}}" CommandParameter="{Binding .}"/>
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackLayout Orientation="Horizontal" Margin="10,0,10,0" HorizontalOptions="EndAndExpand">
+                        <Label Text="Total Cost: "/>
+                        <Label Text="{Binding CostPrice}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                        <Label Text="% Profit: "/>
+                        <Entry Text="{Binding ProfitPercent}" Keyboard="Numeric" WidthRequest="50"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Selling Price: "/>
+                        <Label Text="{Binding SellingPrice}"/>
+                    </StackLayout>
                 </StackLayout>
-                <Button Text="+" Command="{Binding Path=BindingContext.AddNewItem ,Source={x:Reference Name=pieceAdd}}" FontSize="Large" HorizontalOptions="End"/>
-                <ListView ItemsSource="{Binding ItemsUsed}" HasUnevenRows="True" HorizontalOptions="FillAndExpand" HeightRequest="160">
-                    <ListView.Header>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                            </Grid.RowDefinitions>
-                            <Label Text="Type" VerticalTextAlignment="Center"/>
-                            <Label Text="Quantity" Grid.Column="1" Margin="10,0,0,0" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center"/>
-                            <Label Text="Unit" HorizontalOptions="FillAndExpand" Grid.Column="2" Margin="10,0,0,0" VerticalTextAlignment="Center"/>
-                            <Label Text="Total" Grid.Column="3" HorizontalOptions="FillAndExpand" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </ListView.Header>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid BindingContext="{Binding .}">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="20"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
-                                    </Grid.RowDefinitions>
-                                    <Picker ItemsSource="{Binding BindingContext.ItemList, Source={x:Reference Name=pieceAdd}}" ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding ItemSelected}"/>
-                                    <Entry Text="{Binding Quantity}" Keyboard="Numeric" Grid.Column="1" Margin="10,0,0,0" HorizontalOptions="FillAndExpand"/>
-                                    <Picker ItemsSource="{Binding BindingContext.UnitList, Source={x:Reference Name=pieceAdd}}" SelectedItem="{Binding Unit}" HorizontalOptions="FillAndExpand" Grid.Column="2" Margin="10,0,0,0"/>
-                                    <Entry Text="{Binding Total}" Grid.Column="3" HorizontalOptions="FillAndExpand" IsEnabled="False">
-                                        <Entry.Behaviors>
-                                            <Behaviour:EventToCommandBehavior Command="{Binding BindingContext.AddTotalCommand, Source={x:Reference Name=pieceAdd}}" EventName="TextChanged" CommandParameter="NewTextValue"/>
-                                        </Entry.Behaviors>
-                                    </Entry>
-                                    <Button Text="X" Grid.Column="4" Command="{Binding BindingContext.RemoveItemCommand, Source={x:Reference Name=pieceAdd}}" WidthRequest="20" CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand"> 
-                    <Label Text="Total Cost: "/>
-                    <Label Text="{Binding CostPrice}"/>
-                </StackLayout>
-            </StackLayout>
-        </ScrollView>
-    </StackLayout>
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

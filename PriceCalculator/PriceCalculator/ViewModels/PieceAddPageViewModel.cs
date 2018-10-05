@@ -1,4 +1,5 @@
-﻿using PCLStorage;
+﻿using Newtonsoft.Json;
+using PCLStorage;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using PriceCalculator.Data;
@@ -29,6 +30,7 @@ namespace PriceCalculator.ViewModels
             Product = new Product();
             UnitList = new List<string>() { "kg","grams","gruss","piece" };
             ItemList = new List<Item>(App.DbHelper.GetAllItems());
+            SaveProductCommand = new DelegateCommand(SaveProduct);
         }
 
 
@@ -66,6 +68,8 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref itemList, value); }
         }
 
+        public DelegateCommand SaveProductCommand { get; set; }
+
         #endregion
         public async void OpenViewer()
         {
@@ -79,14 +83,50 @@ namespace PriceCalculator.ViewModels
             {
                 PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
                 Directory = "images",
-                Name = Product.Name,
+                Name = DateTime.Now.ToString(),
                 CompressionQuality = 50,
                 DefaultCamera = CameraDevice.Rear
             });
                 if (imgFile == null)
                 return;
             // create a file, overwriting any existing file  
+            Product.ImgName = imgFile.Path;
             Image = $"{imgFile.Path}";
+        }
+
+        public async void SaveProduct()
+        {
+            string messages = "";
+            if(string.IsNullOrEmpty(Product.ImgName))
+            {
+                messages += "Choose a Product Image\n";
+            }
+            if(Product.ItemsUsed == null ||(Product.ItemsUsed != null && Product.ItemsUsed.Count==0))
+            {
+                messages += "Add an Item\n";
+            }
+            else if(Product.ItemsUsed.Count(e=>e.Quantity==0 || string.IsNullOrEmpty(e.Type))>0)
+            {
+                messages += "Enter 'Quantity' and 'Type' of every Item\n";
+            }
+            if(Product.ProfitPercent==0)
+            {
+                messages += "Enter the Profit %\n";
+            }
+            if(string.IsNullOrEmpty(Product.Name))
+            {
+                messages += "Enter the Name of the Product";
+            }
+            if(!string.IsNullOrEmpty(messages))
+            {
+                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                return;
+            }
+            Product.Items = JsonConvert.SerializeObject(Product.ItemsUsed);
+            int add = App.DbHelper.SaveProduct(Product);
+            await DialogService.DisplayAlertAsync("Success", "Product added Successfully","Ok");
+            Xamarin.Forms.MessagingCenter.Send<Product>(Product, "added");
+            await NavigationService.GoBackAsync();
         }
 
         public void AddItem()
@@ -104,6 +144,10 @@ namespace PriceCalculator.ViewModels
         public void RemoveItem(ItemUsed obj)
         {
             Product.ItemsUsed.Remove(obj);
+            if(Product.ItemsUsed != null && Product.ItemsUsed.Count>0)
+            {
+                AddTotal(obj);
+            }
         }
     }
 }

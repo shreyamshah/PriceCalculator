@@ -27,6 +27,14 @@ namespace PriceCalculator.Data
             set { SetProperty(ref name, value); }
         }
 
+        private string imgName;
+        [Column("imgName")]
+        public string ImgName
+        {
+            get { return imgName; }
+            set { SetProperty(ref imgName, value); }
+        }
+
         private string category;
         [Column("category")]
         public string Category
@@ -62,7 +70,14 @@ namespace PriceCalculator.Data
         public int ProfitPercent
         {
             get { return profitPercent; }
-            set { SetProperty(ref profitPercent, value); }
+            set
+            {
+                SetProperty(ref profitPercent, value);
+                if(profitPercent != 0)
+                {
+                    SellingPrice = CostPrice * (1+((double)profitPercent / 100));
+                }
+            }
         }
 
         private double sellingPrice;

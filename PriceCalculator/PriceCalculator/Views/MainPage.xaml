@@ -6,8 +6,23 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddCommand}"/>
     </ContentPage.ToolbarItems>
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label Text="Welcome to Xamarin Forms and Prism!" />
-    </StackLayout>
-
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView ItemsSource="{Binding ProductsList}" Margin="10,10,0,0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding ImgName}" HeightRequest="50" WidthRequest="50"/>
+                                <StackLayout BindingContext="{Binding .}">
+                                    <Label Text="{Binding Name}"/>
+                                    <Label Text="{Binding SellingPrice,StringFormat='{0:c}'}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>
