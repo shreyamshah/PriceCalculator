@@ -5,6 +5,6 @@
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="PriceCalculator.Views.SettingsPage">
     <StackLayout>
-        <Button Text="View Items" Command="{Binding ViewItem}"/>
+        <Button Text="View Categories" Command="{Binding ViewItem}"/>
     </StackLayout>
 </ContentPage>

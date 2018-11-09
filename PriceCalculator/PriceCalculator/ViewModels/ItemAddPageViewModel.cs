@@ -14,7 +14,7 @@ namespace PriceCalculator.ViewModels
 	{
         public ItemAddPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService, dialogService)
         {
-            UnitList = new List<string>() { "kg", "grams", "gruss", "piece","dozen" };
+            UnitList = new List<string>() { "kg", "grams", "gross", "piece","dozen" };
             Item = new Item();
             SaveItem = new DelegateCommand(SaveItemAsync);
         }
@@ -60,5 +60,18 @@ namespace PriceCalculator.ViewModels
         }
 
         public DelegateCommand SaveItem { get; set; }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if(parameters.ContainsKey("Category"))
+            {
+                Category category = parameters["Category"] as Category;
+                if(category!=null && category.Id.HasValue)
+                {
+                    Item.CategoryId = category.Id.ToString();
+                }
+            }
+        }
     }
 }

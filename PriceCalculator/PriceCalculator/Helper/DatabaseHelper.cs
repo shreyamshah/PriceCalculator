@@ -57,15 +57,50 @@ namespace PriceCalculator.Helper
             return -1;
         }
 
-        public List<Item> GetAllItems()
+        public List<Item> GetAllItems( string category )
         {
             if (App.Connection != null)
             {
-                string query = "select * from item";
+                string query = $"select * from item where categoryId = '{category}'";
                 try
                 {
                     List<Item> items = App.Connection.Query<Item>(query);
                     return items;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            return null;
+        }
+
+        public int SaveCategory(Category category)
+        {
+            try
+            {
+                if (App.Connection != null)
+                {
+                    int add = App.Connection.Insert(category);
+                    return add;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return -1;
+        }
+
+        public List<Category> GetAllCategory()
+        {
+            if (App.Connection != null)
+            {
+                string query = "select * from category";
+                try
+                {
+                    List<Category> categories = App.Connection.Query<Category>(query);
+                    return categories;
                 }
                 catch (Exception ex)
                 {

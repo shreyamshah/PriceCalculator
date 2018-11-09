@@ -9,20 +9,30 @@
         <ToolbarItem Text="Save" Command="{Binding SaveProductCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout Margin="10,30,10,0">
-            <ScrollView>
-                <StackLayout BindingContext="{Binding Product}">
-                    <Image Source="{Binding BindingContext.Image,Mode=TwoWay,Source={x:Reference Name=pieceAdd}}" HorizontalOptions="Center">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding BindingContext.OnImageTapped,Source={x:Reference Name=pieceAdd}}"/>
-                        </Image.GestureRecognizers>
-                    </Image>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <Label Text="Name: " HeightRequest="30" VerticalTextAlignment="Center"/>
-                        <Entry Text="{Binding Name}" HeightRequest="40" HorizontalOptions="FillAndExpand"/>
-                    </StackLayout>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand">
+            <!--<ScrollView>-->
+            <StackLayout BindingContext="{Binding Product}" Margin="10,30,10,0" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                <Image Source="{Binding BindingContext.Image,Mode=TwoWay,Source={x:Reference Name=pieceAdd}}" HorizontalOptions="Center" WidthRequest="30"  HeightRequest="30">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BindingContext.OnImageTapped,Source={x:Reference Name=pieceAdd}}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <!--<Label Text="Name: " HeightRequest="30" VerticalTextAlignment="Center"/>-->
+                    <Entry Text="{Binding Name}" HeightRequest="30" Placeholder="Name" HorizontalOptions="FillAndExpand"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <Label Text="Category: " HeightRequest="30" VerticalTextAlignment="Center"/>
+                    <Picker ItemDisplayBinding="{Binding Name}" ItemsSource="{Binding BindingContext.CategoryList,Source={x:Reference Name=pieceAdd}}"
+                        SelectedItem="{Binding BindingContext.SelectedCategory,Source={x:Reference Name=pieceAdd}}" HeightRequest="40" HorizontalOptions="FillAndExpand"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <Label Text="% Profit: " VerticalTextAlignment="Center"/>
+                    <Entry Text="{Binding ProfitPercent}" Keyboard="Numeric" WidthRequest="50"/>
                     <Button Text="+" Command="{Binding Path=BindingContext.AddNewItem ,Source={x:Reference Name=pieceAdd}}" FontSize="Large" HorizontalOptions="End"/>
-                    <ListView ItemsSource="{Binding ItemsUsed}" HasUnevenRows="True" HorizontalOptions="FillAndExpand" HeightRequest="160">
+                </StackLayout>
+                <StackLayout HeightRequest="360">
+                    <ListView ItemsSource="{Binding ItemsUsed}" HasUnevenRows="True" SelectedItem="null">
                         <ListView.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -72,20 +82,22 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <StackLayout Orientation="Horizontal" Margin="10,0,10,0" HorizontalOptions="EndAndExpand">
-                        <Label Text="Total Cost: "/>
-                        <Label Text="{Binding CostPrice}"/>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
-                        <Label Text="% Profit: "/>
-                        <Entry Text="{Binding ProfitPercent}" Keyboard="Numeric" WidthRequest="50"/>
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="Selling Price: "/>
-                        <Label Text="{Binding SellingPrice}"/>
-                    </StackLayout>
                 </StackLayout>
-            </ScrollView>
-        </StackLayout>
+                <StackLayout Orientation="Horizontal" Margin="10,0,10,0" HorizontalOptions="EndAndExpand">
+                    <Label Text="Total Cost: "/>
+                    <Label Text="{Binding CostPrice}"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                    <Label Text="Selling Price: "/>
+                    <Label Text="{Binding SellingPrice}" WidthRequest="50" Margin="0,0,0,5"/>
+                </StackLayout>
+            </StackLayout>
+            <!--</ScrollView>-->
+            <Image Source="{Binding Image}" IsVisible="{Binding BindingContext.IsFull,Source={x:Reference Name=pieceAdd}}" Aspect="AspectFit" AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1" AbsoluteLayout.LayoutFlags="PositionProportional">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BindingContext.OnImageTapped,Source={x:Reference Name=pieceAdd}}"/>
+                </Image.GestureRecognizers>
+            </Image>
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

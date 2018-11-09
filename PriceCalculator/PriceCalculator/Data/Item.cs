@@ -17,6 +17,14 @@ namespace PriceCalculator.Data
             set { SetProperty(ref id, value); }
         }
 
+        private string categoryId;
+        [Column("categoryId")]
+        public string CategoryId
+        {
+            get { return categoryId; }
+            set { SetProperty(ref categoryId,value); }
+        }
+
         private double rate;
         [Column("rate")]
         public double Rate
@@ -40,5 +48,26 @@ namespace PriceCalculator.Data
             get { return unit; }
             set { SetProperty(ref unit, value); }
         }
+    }
+
+    [Table("category")]
+    public class Category : BindableBase
+    {
+        private int? id;
+        [Column("id"), PrimaryKey, AutoIncrement]
+        public int? Id
+        {
+            get { return id; }
+            set { SetProperty(ref id, value); }
+        }
+
+        private string name;
+        [Column("name")]
+        public string Name
+        {
+            get { return name; }
+            set { SetProperty(ref name, value); }
+        }
+
     }
 }

@@ -75,7 +75,7 @@ namespace PriceCalculator.Data
                 SetProperty(ref profitPercent, value);
                 if(profitPercent != 0)
                 {
-                    SellingPrice = CostPrice * (1+((double)profitPercent / 100));
+                    SellingPrice = CostPrice * 100/(100-((double)profitPercent));
                 }
             }
         }

@@ -26,11 +26,14 @@ namespace PriceCalculator.ViewModels
             AddNewItem = new DelegateCommand(AddItem);
             AddTotalCommand = new DelegateCommand<object>(AddTotal);
             RemoveItemCommand = new DelegateCommand<ItemUsed>(RemoveItem);
+            ShareImage = new DelegateCommand(Share);
             Image = "addimage.png";
             Product = new Product();
-            UnitList = new List<string>() { "kg","grams","gruss","piece" };
-            ItemList = new List<Item>(App.DbHelper.GetAllItems());
+            CategoryList = App.DbHelper.GetAllCategory();
+            UnitList = new List<string>() { "kg","grams","gross","piece" };
             SaveProductCommand = new DelegateCommand(SaveProduct);
+            Width = Hieght = 30;
+            IsFull = false;
         }
 
 
@@ -39,6 +42,7 @@ namespace PriceCalculator.ViewModels
         public DelegateCommand AddNewItem { get; set; }
         public DelegateCommand<object> AddTotalCommand { get; set; }
         public DelegateCommand<ItemUsed> RemoveItemCommand { get; set; }
+        public DelegateCommand ShareImage { get; set; }
 
         private ImageSource image;
         public ImageSource Image
@@ -68,30 +72,91 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref itemList, value); }
         }
 
+        private List<Category> categoryList;
+        public List<Category> CategoryList
+        {
+            get { return categoryList; }
+            set { SetProperty(ref categoryList, value); }
+        }
+
+        private Category selectedCategory;
+        public Category SelectedCategory
+        {
+            get { return selectedCategory; }
+            set
+            {
+                SetProperty(ref selectedCategory, value);
+                if(selectedCategory!=null)
+                {
+                    Product.Category = selectedCategory.Name;
+                    ItemList = new List<Item>(App.DbHelper.GetAllItems(selectedCategory.Id.ToString()));
+                    if(ItemList != null && ItemList.Count>0)
+                    {
+                        foreach (Item item in ItemList)
+                        {
+                            Product.ItemsUsed.Add(new ItemUsed() { ItemSelected=item});
+                        }
+                    }
+                }
+            }
+        }
+
+        private int width;
+        public int Width
+        {
+            get { return width; }
+            set { SetProperty(ref width, value); }
+        }
+
+        private int hieght;
+        public int Hieght
+        {
+            get { return hieght; }
+            set { SetProperty(ref hieght, value); }
+        }
+
+        private bool isFull;
+        public bool IsFull
+        {
+            get { return isFull; }
+            set { SetProperty(ref isFull, value); }
+        }
+
         public DelegateCommand SaveProductCommand { get; set; }
 
         #endregion
         public async void OpenViewer()
         {
-            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+            if (string.IsNullOrEmpty(Product.ImgName))
             {
-                await DialogService.DisplayAlertAsync("No Camera", " No camera available.", "OK");
-                return;
-            }
-            IFolder folder = FileSystem.Current.LocalStorage;
-            var imgFile = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions()
-            {
-                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
-                Directory = "images",
-                Name = DateTime.Now.ToString(),
-                CompressionQuality = 50,
-                DefaultCamera = CameraDevice.Rear
-            });
+                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                {
+                    await DialogService.DisplayAlertAsync("No Camera", " No camera available.", "OK");
+                    return;
+                }
+                IFolder folder = FileSystem.Current.LocalStorage;
+                var imgFile = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions()
+                {
+                    PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
+                    Directory = "images",
+                    Name = DateTime.Now.ToString(),
+                    CompressionQuality = 10,
+                    DefaultCamera = CameraDevice.Rear
+                });
                 if (imgFile == null)
-                return;
-            // create a file, overwriting any existing file  
-            Product.ImgName = imgFile.Path;
-            Image = $"{imgFile.Path}";
+                    return;
+                // create a file, overwriting any existing file  
+                Product.ImgName = imgFile.Path;
+                //Width = Hieght = 150;
+                Image = $"{imgFile.Path}";
+            }
+            else
+            {
+                if (IsFull)
+                    IsFull = false;
+                else
+                    IsFull = true;
+            }
         }
 
         public async void SaveProduct()
@@ -129,11 +194,18 @@ namespace PriceCalculator.ViewModels
             await NavigationService.GoBackAsync();
         }
 
-        public void AddItem()
+        public async void AddItem()
         {
-            if (Product.ItemsUsed == null)
-                Product.ItemsUsed = new ObservableCollection<ItemUsed>();
-            Product.ItemsUsed.Add(new ItemUsed());
+            if(!string.IsNullOrEmpty(Product.Category))
+            {
+                if (Product.ItemsUsed == null)
+                    Product.ItemsUsed = new ObservableCollection<ItemUsed>();
+                Product.ItemsUsed.Add(new ItemUsed());
+            }
+            else
+            {
+                await DialogService.DisplayAlertAsync("Alert", "Select Category before adding an item", "Ok");
+            }
         }
 
         public void AddTotal(object obj)
@@ -144,10 +216,20 @@ namespace PriceCalculator.ViewModels
         public void RemoveItem(ItemUsed obj)
         {
             Product.ItemsUsed.Remove(obj);
-            if(Product.ItemsUsed != null && Product.ItemsUsed.Count>0)
+            if (Product.ItemsUsed != null && Product.ItemsUsed.Count > 0)
             {
                 AddTotal(obj);
             }
+            else
+                Product.CostPrice = 0;
+        }
+
+
+
+        public void Share()
+        {
+            Xamarin.Forms.DependencyService.Get<IShareHelper>().SharePicture(Product.ImgName,Product.SellingPrice,Product.Name);
+                
         }
     }
 }

@@ -42,6 +42,9 @@ namespace PriceCalculator
             containerRegistry.RegisterForNavigation<ItemAddPage>();
             containerRegistry.RegisterForNavigation<SettingsPage>();
             containerRegistry.RegisterForNavigation<ItemPage>();
+            containerRegistry.RegisterForNavigation<CategoryPage>();
+            containerRegistry.RegisterForNavigation<CategoryAddPage>();
+            containerRegistry.RegisterForNavigation<PieceDetailPage>();
         }
     }
 }

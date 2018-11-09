@@ -16,20 +16,21 @@ namespace PriceCalculator.ViewModels
         {
             Xamarin.Forms.MessagingCenter.Subscribe<Item>(this, "added", OnItemAdded);
             AddItemCommand = new DelegateCommand(AddItem);
-            GetAllItems();
         }
 
         public void OnItemAdded(Item obj)
         {
-            if(obj != null)
+            if(obj != null && category!=null)
             {
-                GetAllItems();
+                GetAllItems(category.Name);
             }
         }
 
         public void AddItem()
         {
-            NavigationService.NavigateAsync("ItemAddPage");
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add("Category", category);
+            NavigationService.NavigateAsync("ItemAddPage",parameters);
         }
 
         public DelegateCommand AddItemCommand { get; set; }
@@ -40,9 +41,24 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref itemsList, value); }
         }
 
-        public void GetAllItems()
+        Category category;
+
+        public void GetAllItems(string category)
         {
-            ItemsList = new ObservableCollection<Item>(App.DbHelper.GetAllItems());
+            ItemsList = new ObservableCollection<Item>(App.DbHelper.GetAllItems(category));
+        }
+
+        public override void OnNavigatedTo(NavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            if(parameters.ContainsKey("category"))
+            {
+                category = parameters["category"] as Category;
+                if(category != null && category.Id.HasValue)
+                {
+                    GetAllItems(category.Id.ToString());
+                }
+            }
         }
     }
 }

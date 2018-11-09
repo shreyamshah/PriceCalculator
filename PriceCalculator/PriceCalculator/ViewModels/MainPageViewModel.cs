@@ -33,6 +33,22 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref productsList, value); }
         }
 
+        private Product selectedProduct;
+        public Product SelectedProduct
+        {
+            get { return selectedProduct; }
+            set
+            {
+                SetProperty(ref selectedProduct, value);
+                if(selectedProduct != null)
+                {
+                    NavigationParameters parameter = new NavigationParameters();
+                    parameter.Add("Product", selectedProduct);
+                    NavigationService.NavigateAsync("PieceDetailPage", parameter);
+                }
+            }
+        }
+
         #endregion
 
         public async void Add()

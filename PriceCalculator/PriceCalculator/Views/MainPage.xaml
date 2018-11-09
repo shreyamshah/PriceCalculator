@@ -8,13 +8,14 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding ProductsList}" Margin="10,10,0,0">
+            <ListView ItemsSource="{Binding ProductsList}" Margin="10,10,0,0" SelectedItem="{Binding SelectedProduct}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Image Source="{Binding ImgName}" HeightRequest="50" WidthRequest="50"/>
+                            <StackLayout Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                <Image Source="{Binding ImgName}" HeightRequest="100" WidthRequest="100"/>
                                 <StackLayout BindingContext="{Binding .}">
+                                    <Label Text="{Binding Category}"/>
                                     <Label Text="{Binding Name}"/>
                                     <Label Text="{Binding SellingPrice,StringFormat='{0:c}'}"/>
                                 </StackLayout>
