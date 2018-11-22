@@ -1,0 +1,10 @@
+.vs/
+PriceCalculator/PriceCalculator/bin/
+PriceCalculator/PriceCalculator/obj/
+PriceCalculator/PriceCalculator.Android/bin/
+PriceCalculator/PriceCalculator.Android/obj/
+PriceCalculator/PriceCalculator.iOS/bin/
+PriceCalculator/PriceCalculator.iOS/obj/
+PriceCalculator/PriceCalculator.UWP/bin/
+PriceCalculator/PriceCalculator.UWP/obj/
+/desktop.ini

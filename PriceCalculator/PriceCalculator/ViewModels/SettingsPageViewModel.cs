@@ -17,6 +17,7 @@ namespace PriceCalculator.ViewModels
         public SettingsPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService, dialogService)
         {
             ViewItem = new DelegateCommand(ViewItems);
+            ViewParty = new DelegateCommand(ViewParties);
             Xamarin.Forms.MessagingCenter.Subscribe<ActivityResult>(this, ActivityResult.key,OnAuthFailed);
         }
 
@@ -26,10 +27,16 @@ namespace PriceCalculator.ViewModels
         }
 
         public DelegateCommand ViewItem { get; set; }
+        public DelegateCommand ViewParty { get; set; }
 
         public void ViewItems()
         {
             NavigationService.NavigateAsync("CategoryPage");
+        }
+
+        public void ViewParties()
+        {
+            NavigationService.NavigateAsync("PartyPage");
         }
 
         public override void OnNavigatedTo(NavigationParameters parameters)
@@ -40,7 +47,7 @@ namespace PriceCalculator.ViewModels
         public override void OnNavigatingTo(NavigationParameters parameters)
         {
             base.OnNavigatingTo(parameters);
-            Xamarin.Forms.DependencyService.Get<IShareHelper>().Authenticate();
+            Xamarin.Forms.DependencyService.Get<IAuthHelper>().Authenticate();
         }
     }
 }

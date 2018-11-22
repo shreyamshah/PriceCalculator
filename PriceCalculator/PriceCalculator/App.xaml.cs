@@ -8,6 +8,9 @@ using Prism.Unity;
 using SQLite;
 using PriceCalculator.Helper;
 using PriceCalculator.Helpers;
+using PriceCalculator.Data;
+using System.Collections.Generic;
+using System.Linq;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace PriceCalculator
@@ -30,7 +33,33 @@ namespace PriceCalculator
             InitializeComponent();
             Connection = DependencyService.Get<ISqlite>().GetConnection();
             DbHelper = new DatabaseHelper();
-            await NavigationService.NavigateAsync("MasterPage/NavigationPage/MainPage");
+            List<string> sqlFiles = TableInfo.Tables;
+            if(sqlFiles != null && sqlFiles.Count>0)
+            {
+                List<Info> sqlexecuted = new List<Info>();
+                if(App.DbHelper.GetTableCount()>1)
+                    sqlexecuted = App.DbHelper.GetScriptsLoaded();
+                foreach (string item in sqlFiles)
+                {
+                    if (sqlexecuted != null && sqlexecuted.Count(e => e.key.Equals(item)) == 0)
+                    {
+                        string file = DependencyService.Get<IFileHelper>().GetFile(item);
+                        if (!string.IsNullOrEmpty(file))
+                        {
+                            List<string> queries = new List<string>(file.Split(';'));
+                            foreach (string query in queries)
+                            {
+                                if (!string.IsNullOrEmpty(query))
+                                {
+                                    DbHelper.ExecuteQuery(query);
+                                }
+                            }
+                            DbHelper.SaveInfo(item, "script");
+                        }
+                    }
+                }
+            }
+            await NavigationService.NavigateAsync("/MasterPage/NavigationPage/MainPage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -45,6 +74,7 @@ namespace PriceCalculator
             containerRegistry.RegisterForNavigation<CategoryPage>();
             containerRegistry.RegisterForNavigation<CategoryAddPage>();
             containerRegistry.RegisterForNavigation<PieceDetailPage>();
+            containerRegistry.RegisterForNavigation<PartyPage>();
         }
     }
 }

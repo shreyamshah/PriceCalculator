@@ -3,5 +3,6 @@
   <PropertyGroup>
     <SelectedDevice>Motorola Moto G %284%29</SelectedDevice>
     <DefaultDevice>AVD_for_Nexus_10_by_Google</DefaultDevice>
+    <AndroidDesignerPreferredDevice>Nexus 4</AndroidDesignerPreferredDevice>
   </PropertyGroup>
 </Project>

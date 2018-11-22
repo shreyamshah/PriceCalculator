@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Views="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
+             xmlns:Custom="clr-namespace:PriceCalculator.CustomControls;assembly=PriceCalculator"
              x:Class="PriceCalculator.Views.MainPage" Title="Home"
              Icon="ic_launcher.png">
     <ContentPage.ToolbarItems>
@@ -8,6 +10,8 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
+            <Custom:Tabs ItemSource="{Binding Categories}" Position="{Binding Position}"/>
+            <!--<Views:CarouselViewControl ItemsSource="{Binding Categories}" Position="{Binding Position}" ShowArrows="False" ShowIndicators="False" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>-->
             <ListView ItemsSource="{Binding ProductsList}" Margin="10,10,0,0" SelectedItem="{Binding SelectedProduct}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>

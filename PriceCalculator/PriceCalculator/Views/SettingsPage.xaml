@@ -6,5 +6,6 @@
              x:Class="PriceCalculator.Views.SettingsPage">
     <StackLayout>
         <Button Text="View Categories" Command="{Binding ViewItem}"/>
+        <Button Text="View Parties" Command="{Binding ViewParty}"/>
     </StackLayout>
 </ContentPage>

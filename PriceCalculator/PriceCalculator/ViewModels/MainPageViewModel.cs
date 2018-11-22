@@ -1,5 +1,6 @@
 ﻿using PCLStorage;
 using PriceCalculator.Data;
+using Prism;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
@@ -19,8 +20,9 @@ namespace PriceCalculator.ViewModels
         {
             Title = "Main Page";
             AddCommand = new DelegateCommand(Add);
-            GetAllProducts();
             Xamarin.Forms.MessagingCenter.Subscribe<Product>(this, "added", OnProductAdded);
+            Categories = App.DbHelper.GetAllCategory().Select(e=>e.Name).ToList();
+            Position = 0;
         }
 
         #region Property
@@ -49,6 +51,24 @@ namespace PriceCalculator.ViewModels
             }
         }
 
+        private List<string> categories;
+        public List<string> Categories
+        {
+            get { return categories; }
+            set { SetProperty(ref categories, value); }
+        }
+
+        private int position;
+        public int Position
+        {
+            get { return position; }
+            set
+            {
+                SetProperty(ref position, value);
+                GetAllProducts(Categories[position]);
+            }
+        }
+
         #endregion
 
         public async void Add()
@@ -56,16 +76,16 @@ namespace PriceCalculator.ViewModels
             await NavigationService.NavigateAsync("PieceAddPage");
         }
 
-        public void GetAllProducts()
+        public void GetAllProducts(string category)
         {
-            ProductsList = new ObservableCollection<Product>(App.DbHelper.GetAllProducts());
+            ProductsList = new ObservableCollection<Product>(App.DbHelper.GetAllProducts(category));
         }
 
         public void OnProductAdded(Product obj)
         {
             if(obj != null)
             {
-                GetAllProducts();
+                GetAllProducts(Categories[Position]);
             }
         }
 
