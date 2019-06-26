@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True" x:Name="editPage"
+             x:Class="PriceCalculator.Views.ItemEditPage">
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Command="{Binding SaveItem}"/>
+    </ContentPage.ToolbarItems>-->
+    <StackLayout>
+        <StackLayout Style="{DynamicResource StackBlack}" Orientation="Horizontal">
+            <Button Text="Cancel" Command="{Binding CancelCommand}" Style="{DynamicResource SelectedTab}" HorizontalOptions="StartAndExpand"/>
+            <Label Text="Edit Item" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"/>
+            <Button Text="Save" Command="{Binding SaveCommand}" Style="{DynamicResource SelectedTab}" HorizontalOptions="EndAndExpand"/>
+        </StackLayout>
+        <StackLayout BindingContext="{Binding Item}" Margin="10,10,0,0">
+            <Label Text="Name"/>
+            <Entry Text="{Binding Name}"/>
+            <Label Text="Rate"/>
+            <Entry Text="{Binding Rate}" Keyboard="Numeric"/>
+            <Label Text="Unit"/>
+            <Picker SelectedItem="{Binding Unit}" IsEnabled="False" ItemsSource="{Binding BindingContext.UnitList,Source={x:Reference Name=editPage}}"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

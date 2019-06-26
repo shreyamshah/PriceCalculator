@@ -23,10 +23,10 @@ namespace PriceCalculator.Droid.Helpers
         {
 
         }
-        public void SharePicture(string imageData, double sellingPrice,string name)
+        public void SharePicture(string imageData,string text)
         {
             var intent = new Intent(Intent.ActionSend);
-            intent.PutExtra(Intent.ExtraText, $"Name: {name}\nPrice: {sellingPrice}");
+            intent.PutExtra(Intent.ExtraText, text);
             intent.SetType("img/jpg");
             intent.PutExtra(Intent.ExtraStream, Android.Net.Uri.FromFile(new Java.IO.File(imageData)));
             Android.App.Application.Context.StartActivity(Intent.CreateChooser(intent, "Share Product"));

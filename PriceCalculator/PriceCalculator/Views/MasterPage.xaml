@@ -2,8 +2,7 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                   xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
-                  xmlns:views="clr-namespace:PriceCalculator.Views;assembly=PriceCalculator"
-                  prism:ViewModelLocator.AutowireViewModel="True" Icon="hamburger.png"
+                  prism:ViewModelLocator.AutowireViewModel="True" Icon="hamburger.png" Title="Price Calc"
                   x:Class="PriceCalculator.Views.MasterPage">
 
     <MasterDetailPage.Master>

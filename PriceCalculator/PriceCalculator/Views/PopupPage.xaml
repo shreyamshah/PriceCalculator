@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:animation="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="PriceCalculator.Views.PopupPage">
+    <popup:PopupPage.Animation>
+        <animation:ScaleAnimation PositionIn="Center"
+              PositionOut="Center" ScaleIn="1.2"
+              ScaleOut="0.8" DurationIn="400"
+              DurationOut="300" EasingIn="SinOut"
+              EasingOut="SinIn" HasBackgroundAnimation="True"/>
+    </popup:PopupPage.Animation>
+    <StackLayout BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Padding="20">
+        <Editor Text="{Binding Text}" PlaceholderColor="Gray" Placeholder="Enter the text to share" TextColor="Black"  HeightRequest="100"/>
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Close" Command="{Binding CloseCommand}"/>
+            <Button Text="Share" Command="{Binding ShareCommand}"/>
+        </StackLayout>
+    </StackLayout>
+</popup:PopupPage>

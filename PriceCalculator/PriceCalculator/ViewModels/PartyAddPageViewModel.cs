@@ -11,7 +11,8 @@ namespace PriceCalculator.ViewModels
 {
 	public class PartyAddPageViewModel : ViewModelBase
 	{
-        public DelegateCommand SavePartyCommand { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
 
         private Party party;
         public Party Party
@@ -23,29 +24,43 @@ namespace PriceCalculator.ViewModels
         public PartyAddPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService, dialogService)
         {
             Party = new Party();
-            SavePartyCommand = new DelegateCommand(SaveParty);
+            SaveCommand = new DelegateCommand(SaveParty);
+            CancelCommand = new DelegateCommand(Cancel);
         }
 
         public async void SaveParty()
         {
-            string messages = "";
-            if (string.IsNullOrEmpty(Party.Name))
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to save?", "Yes", "No");
+            if (confirm)
             {
-                messages += "Name is a required field";
+                string messages = "";
+                if (string.IsNullOrEmpty(Party.Name))
+                {
+                    messages += "Name is a required field";
+                }
+                if (Party.ProfitPercent == 0)
+                {
+                    messages += "Profit Percent is a required field";
+                }
+                if (!string.IsNullOrEmpty(messages))
+                {
+                    await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                    return;
+                }
+                int add = await App.DbHelper.SaveParty(Party);
+                await DialogService.DisplayAlertAsync("Success", "Party added Successfully", "Ok");
+                Xamarin.Forms.MessagingCenter.Send<Party>(Party, "added");
+                await NavigationService.GoBackAsync();
             }
-            if (Party.ProfitPercent==0)
+        }
+
+        public async void Cancel()
+        {
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to cancel?", "Yes", "No");
+            if (confirm)
             {
-                messages += "Profit Percent is a required field";
+                await NavigationService.GoBackAsync();
             }
-            if (!string.IsNullOrEmpty(messages))
-            {
-                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
-                return;
-            }
-            int add = App.DbHelper.SaveParty(Party);
-            await DialogService.DisplayAlertAsync("Success", "Party added Successfully", "Ok");
-            Xamarin.Forms.MessagingCenter.Send<Party>(Party, "added");
-            await NavigationService.GoBackAsync();
         }
     }
 }

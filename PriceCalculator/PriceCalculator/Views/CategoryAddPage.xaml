@@ -4,13 +4,17 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="PriceCalculator.Views.CategoryAddPage">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SaveCategoryCommand}"/>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout Margin="10,30,10,0" HorizontalOptions="FillAndExpand" BindingContext="{Binding Category}">
-            <Label Text="Name"/>
-            <Entry Text="{Binding Name}"/>
+        <StackLayout>
+            <StackLayout Style="{DynamicResource StackBlack}" Orientation="Horizontal">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" Style="{DynamicResource SelectedTab}" HorizontalOptions="StartAndExpand"/>
+                <Label Text="Add Category" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"/>
+                <Button Text="Save" Command="{Binding SaveCommand}" Style="{DynamicResource SelectedTab}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Margin="10,30,10,0" HorizontalOptions="FillAndExpand" BindingContext="{Binding Category}">
+                <Label Text="Name"/>
+                <Entry Text="{Binding Name}"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

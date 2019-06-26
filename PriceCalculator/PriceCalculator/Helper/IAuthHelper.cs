@@ -6,6 +6,6 @@ namespace PriceCalculator.Helper
 {
     public interface IAuthHelper
     {
-        void Authenticate();
+        void Authenticate(int requestCode = 0);
     }
 }

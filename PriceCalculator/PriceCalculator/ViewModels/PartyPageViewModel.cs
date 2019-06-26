@@ -17,7 +17,7 @@ namespace PriceCalculator.ViewModels
         {
             Xamarin.Forms.MessagingCenter.Subscribe<Party>(this, "added", OnPartyAdded);
             AddPartyCommand = new DelegateCommand(AddParty);
-            GetAllParty();
+            //GetAllParty();
         }
 
         public void OnPartyAdded(Party obj)
@@ -30,7 +30,7 @@ namespace PriceCalculator.ViewModels
 
         public void AddParty()
         {
-            NavigationService.NavigateAsync("PartyAddPage");
+            NavigationService.NavigateAsync("PartyAddPage",null,true,true);
         }
 
         private ObservableCollection<Party> partyList;
@@ -40,9 +40,15 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref partyList, value); }
         }
 
-        public void GetAllParty()
+        public async void GetAllParty()
         {
-            PartyList = new ObservableCollection<Party>(App.DbHelper.GetAllParty());
+            PartyList = new ObservableCollection<Party>(await App.DbHelper.GetAllParty());
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            GetAllParty();
         }
     }
 }

@@ -18,11 +18,15 @@ namespace PriceCalculator.ViewModels
         {
             OnImageTapped = new DelegateCommand(OpenViewer);
             ShareImage = new DelegateCommand(Share);
+            EditProduct = new DelegateCommand(Edit);
+            DeleteCommand = new DelegateCommand(Delete);
             IsFull = false;
         }
 
         public DelegateCommand OnImageTapped { get; set; }
         public DelegateCommand ShareImage { get; set; }
+        public DelegateCommand EditProduct { get; set; }
+        public DelegateCommand DeleteCommand { get; set; }
 
         private bool isFull;
         public bool IsFull
@@ -46,28 +50,47 @@ namespace PriceCalculator.ViewModels
                 IsFull = true;
         }
 
-        public void Share()
+        public async void Share()
         {
-            if(Product!=null && !string.IsNullOrEmpty(Product.ImgName) && !string.IsNullOrEmpty(Product.Name))
+            if(Product!=null && !string.IsNullOrEmpty(Product.ImgName))
             {
-                Xamarin.Forms.DependencyService.Get<IShareHelper>().SharePicture(Product.ImgName, Product.SellingPrice, Product.Name);
+                await NavigationService.NavigateAsync("PopupPage");
             }
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
             if(parameters.ContainsKey("Product"))
             {
                 Product = parameters["Product"] as Product;
-                try
-                {
-                    Product.ItemsUsed = new ObservableCollection<ItemUsed>(JsonConvert.DeserializeObject<List<ItemUsed>>(Product.Items));
-                }
-                catch(Exception ex)
-                {
+            }
+            if(parameters.ContainsKey("Text"))
+            {
+                string text = parameters["Text"] as string;
+                Xamarin.Forms.DependencyService.Get<IShareHelper>().SharePicture(Product.ImgName, text);
+            }
+        }
 
+
+        public void Edit()
+        {
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add("piece", Product);
+            NavigationService.NavigateAsync("PieceEditPage", parameters,true,true);
+        }
+
+        public async void Delete()
+        {
+            bool res = await DialogService.DisplayAlertAsync("Alert", "Are you sure you want to delete?", "Yes", "No");
+            if(res)
+            {
+                int deleted = await App.DbHelper.DeleteProduct(int.Parse(Product.Id));
+                if(deleted>0)
+                {
+                    Xamarin.Forms.DependencyService.Get<IFileHelper>().DeleteFile(Product.ImgName);   
                 }
+                await NavigationService.GoBackAsync();
             }
         }
     }

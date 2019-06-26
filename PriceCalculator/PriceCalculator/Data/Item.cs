@@ -9,9 +9,9 @@ namespace PriceCalculator.Data
     [Table("item")]
     public class Item : BindableBase
     {
-        private int id;
+        private string id;
         [Column("id"),PrimaryKey,AutoIncrement]
-        public int Id
+        public string Id
         {
             get { return id; }
             set { SetProperty(ref id, value); }

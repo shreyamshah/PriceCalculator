@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="com.companyname.pricecalculator" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.companyname.pricecalculator" android:installLocation="preferExternal" android:versionCode="1" android:versionName="1.0">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="27" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.CAMERA" />
-	<uses-permission android:name="android.permission.USE_FINGERPRINT" />
-	<uses-permission android:name="com.samsung.android.providers.context.permssion.WRITE_USE_APP_FEATURE_SURVEY" />
-	<application android:label="Price Calculator" android:icon="@mipmap/ic_launcher">
+	<uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+	<application android:label="Price Calculator" android:hardwareAccelerated="false" android:largeHeap="true">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="com.companyname.pricecalculator.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
 		</provider>
+		<meta-data android:name="io.fabric.ApiKey" android:value="d1968b0a7fd4a0a66318cde263bb75dfc10a6450" />
+		<activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/Base.Theme.AppCompat" />
 	</application>
 </manifest>

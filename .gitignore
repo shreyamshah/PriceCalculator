@@ -1,4 +1,4 @@
-.vs/
+.vs
 PriceCalculator/PriceCalculator/bin/
 PriceCalculator/PriceCalculator/obj/
 PriceCalculator/PriceCalculator.Android/bin/
@@ -8,3 +8,7 @@ PriceCalculator/PriceCalculator.iOS/obj/
 PriceCalculator/PriceCalculator.UWP/bin/
 PriceCalculator/PriceCalculator.UWP/obj/
 /desktop.ini
+/PriceCalculator/PriceCalculator/CustomControls/CustomViewCell.cs
+
+/PriceCalculator/PriceCalculator/PriceCalculator.csproj.user
+/PriceCalculator/PriceCalculator/Properties/PublishProfiles

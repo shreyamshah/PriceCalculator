@@ -1,4 +1,5 @@
-﻿using Plugin.Fingerprint;
+﻿using Plugin.FilePicker.Abstractions;
+using Plugin.Fingerprint;
 using Plugin.Fingerprint.Abstractions;
 using PriceCalculator.Data;
 using PriceCalculator.Helper;
@@ -9,6 +10,7 @@ using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PriceCalculator.ViewModels
 {
@@ -19,6 +21,9 @@ namespace PriceCalculator.ViewModels
             ViewItem = new DelegateCommand(ViewItems);
             ViewParty = new DelegateCommand(ViewParties);
             Xamarin.Forms.MessagingCenter.Subscribe<ActivityResult>(this, ActivityResult.key,OnAuthFailed);
+            BackupDbCommand = new DelegateCommand(BackupDbAsync);
+            RestoreDbCommand = new DelegateCommand(RestoreDb);
+            IsBusy = false;
         }
 
         public void OnAuthFailed(ActivityResult obj)
@@ -28,6 +33,16 @@ namespace PriceCalculator.ViewModels
 
         public DelegateCommand ViewItem { get; set; }
         public DelegateCommand ViewParty { get; set; }
+        public DelegateCommand BackupDbCommand { get; set; }
+        public DelegateCommand RestoreDbCommand { get; set; }
+
+        private bool isBusy;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
+
 
         public void ViewItems()
         {
@@ -39,12 +54,63 @@ namespace PriceCalculator.ViewModels
             NavigationService.NavigateAsync("PartyPage");
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public async void BackupDbAsync()
+        {
+            IsBusy = true;
+            await Task.Delay(500);
+            bool res = await Xamarin.Forms.DependencyService.Get<IFileHelper>().SaveZipToFolder();
+            if(res)
+            {
+                await DialogService.DisplayAlertAsync("Success", "Data backup sucessfull", "Ok");
+            }
+            else
+
+                await DialogService.DisplayAlertAsync("Alert", "Data backup not sucessfull", "Ok");
+            IsBusy = false;
+            App.DbHelper.GetAllParty();
+        }
+
+        public async void RestoreDb()
+        {
+            bool res = await DialogService.DisplayAlertAsync("Confirm","Restoring the previous data will replace all your current data.\n Do you wish to continue?", "Yes", "No");
+            if (res)
+            {
+                FileData file = null;
+                try
+                {
+                    file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile(new string[] { "application/zip" });
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+                if (file == null)
+                    return;
+                //await Task.Delay(500);
+                IsBusy = true;
+                List<byte> dataArray = new List<byte>(file.DataArray);
+                //file.DataArray.CopyTo(dataArray, 0);
+                bool restore = await Xamarin.Forms.DependencyService.Get<IFileHelper>().UnzipDb(dataArray.ToArray());
+                IsBusy = false;
+                if(restore)
+                {
+                    await DialogService.DisplayAlertAsync("Success", "Data restored successfully", "Ok");
+                }
+                else
+                {
+                    await DialogService.DisplayAlertAsync("Alert", "There is some issue in restoring", "Ok");
+                }
+                App.DbHelper.GetAllParty();
+            }
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
         }
 
-        public override void OnNavigatingTo(NavigationParameters parameters)
+        public override void OnNavigatingTo(INavigationParameters parameters)
         {
             base.OnNavigatingTo(parameters);
             Xamarin.Forms.DependencyService.Get<IAuthHelper>().Authenticate();

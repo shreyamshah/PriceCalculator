@@ -7,6 +7,6 @@ namespace PriceCalculator.Helper
 {
     public interface IShareHelper
     {
-        void SharePicture(string imageData,double sellingPrice,string name);
+        void SharePicture(string imageData,string text);
     }
 }

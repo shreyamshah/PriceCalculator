@@ -11,7 +11,8 @@ namespace PriceCalculator.ViewModels
 {
 	public class CategoryAddPageViewModel : ViewModelBase
     {
-        public DelegateCommand SaveCategoryCommand { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
 
         private Category category;
         public Category Category
@@ -22,25 +23,39 @@ namespace PriceCalculator.ViewModels
         public CategoryAddPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService, dialogService)
         {
             Category = new Category();
-            SaveCategoryCommand = new DelegateCommand(SaveCategory);
+            SaveCommand = new DelegateCommand(SaveCategory);
+            CancelCommand = new DelegateCommand(Cancel);
         }
 
         public async void SaveCategory()
         {
-            string messages = "";
-            if (string.IsNullOrEmpty(Category.Name))
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to save?", "Yes", "No");
+            if (confirm)
             {
-                messages += "Name is a required field";
+                string messages = "";
+                if (string.IsNullOrEmpty(Category.Name))
+                {
+                    messages += "Name is a required field";
+                }
+                if (!string.IsNullOrEmpty(messages))
+                {
+                    await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                    return;
+                }
+                int add = await App.DbHelper.SaveCategory(Category);
+                await DialogService.DisplayAlertAsync("Success", "Category added Successfully", "Ok");
+                Xamarin.Forms.MessagingCenter.Send<Category>(Category, "added");
+                await NavigationService.GoBackAsync();
             }
-            if (!string.IsNullOrEmpty(messages))
-            {
-                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
-                return;
-            }
-            int add = App.DbHelper.SaveCategory(Category);
-            await DialogService.DisplayAlertAsync("Success", "Category added Successfully", "Ok");
-            Xamarin.Forms.MessagingCenter.Send<Category>(Category, "added");
-            await NavigationService.GoBackAsync();
         }
-	}
+
+        public async void Cancel()
+        {
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to cancel?", "Yes", "No");
+            if (confirm)
+            {
+                await NavigationService.GoBackAsync();
+            }
+        }
+    }
 }

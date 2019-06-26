@@ -16,7 +16,8 @@ namespace PriceCalculator.ViewModels
         {
             UnitList = new List<string>() { "kg", "grams", "gross", "piece","dozen" };
             Item = new Item();
-            SaveItem = new DelegateCommand(SaveItemAsync);
+            SaveCommand = new DelegateCommand(SaveItemAsync);
+            CancelCommand = new DelegateCommand(Cancel);
         }
 
         private List<string> unitList;
@@ -35,33 +36,47 @@ namespace PriceCalculator.ViewModels
 
         public async void SaveItemAsync()
         {
-            string messages = "";
-            if(string.IsNullOrEmpty(Item.Name))
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to save?", "Yes", "No");
+            if (confirm)
             {
-                messages += "Enter name of the Item.\n";
+                string messages = "";
+                if (string.IsNullOrEmpty(Item.Name))
+                {
+                    messages += "Enter name of the Item.\n";
+                }
+                if (Item.Rate == 0)
+                {
+                    messages += "Enter a valid rate.\n";
+                }
+                if (string.IsNullOrEmpty(Item.Unit))
+                {
+                    messages += "Choose a Unit.";
+                }
+                if (!string.IsNullOrEmpty(messages))
+                {
+                    await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                    return;
+                }
+                await App.DbHelper.SaveItem(Item);
+                await DialogService.DisplayAlertAsync("Success", "Item saved SuccessFully", "Ok");
+                Xamarin.Forms.MessagingCenter.Send<Item>(Item, "added");
+                await NavigationService.GoBackAsync();
             }
-            if(Item.Rate==0)
-            {
-                messages += "Enter a valid rate.\n";
-            }
-            if(string.IsNullOrEmpty(Item.Unit))
-            {
-                messages += "Choose a Unit.";
-            }
-            if(!string.IsNullOrEmpty(messages))
-            {
-                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
-                return;
-            }
-            App.DbHelper.SaveItem(Item);
-            await DialogService.DisplayAlertAsync("Success", "Item saved SuccessFully", "Ok");
-            Xamarin.Forms.MessagingCenter.Send<Item>(Item, "added");
-            await NavigationService.GoBackAsync();
         }
 
-        public DelegateCommand SaveItem { get; set; }
+        public async void Cancel()
+        {
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to cancel?", "Yes", "No");
+            if (confirm)
+            {
+                await NavigationService.GoBackAsync();
+            }
+        }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
             if(parameters.ContainsKey("Category"))

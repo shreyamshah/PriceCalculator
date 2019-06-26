@@ -8,6 +8,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Services;
+using Stormlion.ImageCropper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,23 +16,24 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace PriceCalculator.ViewModels
 {
-	public class PieceAddPageViewModel : ViewModelBase
-	{
-        public PieceAddPageViewModel(INavigationService navigationService,IPageDialogService dialogService):base(navigationService,dialogService)
+    public class PieceAddPageViewModel : ViewModelBase
+    {
+        public PieceAddPageViewModel(INavigationService navigationService, IPageDialogService dialogService) : base(navigationService, dialogService)
         {
             OnImageTapped = new DelegateCommand(OpenViewer);
             AddNewItem = new DelegateCommand(AddItem);
             AddTotalCommand = new DelegateCommand<object>(AddTotal);
             RemoveItemCommand = new DelegateCommand<ItemUsed>(RemoveItem);
-            ShareImage = new DelegateCommand(Share);
+            //ShareImage = new DelegateCommand(Share);
             Image = "addimage.png";
             Product = new Product();
-            CategoryList = App.DbHelper.GetAllCategory();
-            UnitList = new List<string>() { "kg","grams","gross","piece" };
-            SaveProductCommand = new DelegateCommand(SaveProduct);
+            UnitList = new List<string>() { "kg", "grams", "gross", "piece" };
+            SaveCommand = new DelegateCommand(SaveProduct);
+            CancelCommand = new DelegateCommand(Cancel);    
             Width = Hieght = 30;
             IsFull = false;
         }
@@ -66,6 +68,8 @@ namespace PriceCalculator.ViewModels
         }
 
         private List<Item> itemList;
+        public static Action<string,string> Success { get; set; }
+
         public List<Item> ItemList
         {
             get { return itemList; }
@@ -86,18 +90,7 @@ namespace PriceCalculator.ViewModels
             set
             {
                 SetProperty(ref selectedCategory, value);
-                if(selectedCategory!=null)
-                {
-                    Product.Category = selectedCategory.Name;
-                    ItemList = new List<Item>(App.DbHelper.GetAllItems(selectedCategory.Id.ToString()));
-                    if(ItemList != null && ItemList.Count>0)
-                    {
-                        foreach (Item item in ItemList)
-                        {
-                            Product.ItemsUsed.Add(new ItemUsed() { ItemSelected=item});
-                        }
-                    }
-                }
+                OnCategoryChanged(selectedCategory);
             }
         }
 
@@ -122,7 +115,8 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref isFull, value); }
         }
 
-        public DelegateCommand SaveProductCommand { get; set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
 
         #endregion
         public async void OpenViewer()
@@ -137,10 +131,8 @@ namespace PriceCalculator.ViewModels
                 IFolder folder = FileSystem.Current.LocalStorage;
                 var imgFile = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions()
                 {
-                    PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
-                    Directory = "images",
-                    Name = DateTime.Now.ToString(),
-                    CompressionQuality = 10,
+                    PhotoSize = Plugin.Media.Abstractions.PhotoSize.Full,
+                    //Name = DateTime.Now.ToString(),
                     DefaultCamera = CameraDevice.Rear
                 });
                 if (imgFile == null)
@@ -149,49 +141,74 @@ namespace PriceCalculator.ViewModels
                 Product.ImgName = imgFile.Path;
                 //Width = Hieght = 150;
                 Image = $"{imgFile.Path}";
+                Xamarin.Forms.DependencyService.Get<IImageCropHelper>().ShowFromFile(imgFile.Path);
             }
+            else if (IsFull)
+                IsFull = false;
             else
-            {
-                if (IsFull)
-                    IsFull = false;
-                else
-                    IsFull = true;
-            }
+                IsFull = true;
+            Success = (newFile,oldFile) =>
+              {
+                  Xamarin.Forms.DependencyService.Get<IFileHelper>().DeleteFile(oldFile);
+                  Xamarin.Forms.DependencyService.Get<IFileHelper>().RenameFile(oldFile, newFile);
+                  Image = oldFile;
+              };
         }
 
         public async void SaveProduct()
         {
-            string messages = "";
-            if(string.IsNullOrEmpty(Product.ImgName))
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to save?", "Yes", "No");
+            if (confirm)
             {
-                messages += "Choose a Product Image\n";
+                string messages = "";
+                if (string.IsNullOrEmpty(Product.ImgName))
+                {
+                    messages += "Choose a Product Image\n";
+                }
+                if (Product.ItemsUsed == null || (Product.ItemsUsed != null && Product.ItemsUsed.Count == 0))
+                {
+                    messages += "Add an Item\n";
+                }
+                //else if(Product.ItemsUsed.Count(e=>e.Quantity==0 || string.IsNullOrEmpty(e.Type))>0)
+                //{
+                //messages += "Enter 'Quantity' and 'Type' of every Item\n";
+                //}
+                if (Product.ProfitPercent == 0)
+                {
+                    messages += "Enter the Profit %\n";
+                }
+                if (string.IsNullOrEmpty(Product.Name))
+                {
+                    messages += "Enter the Name of the Product";
+                }
+                if (!string.IsNullOrEmpty(messages))
+                {
+                    await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                    return;
+                }
+                //Product.Items = JsonConvert.SerializeObject(Product.ItemsUsed);
+                int add = await App.DbHelper.SaveProduct(Product);
+                foreach (var item in Product.ItemsUsed)
+                {
+                    if(item.Quantity>0)
+                    {
+                        item.ProductId = Product.Id;
+                        await App.DbHelper.SaveItemUsed(item);
+                    }
+                }
+                await DialogService.DisplayAlertAsync("Success", "Product added Successfully", "Ok");
+                Xamarin.Forms.MessagingCenter.Send<Product>(Product, "added");
+                await NavigationService.GoBackAsync();
             }
-            if(Product.ItemsUsed == null ||(Product.ItemsUsed != null && Product.ItemsUsed.Count==0))
+        }
+
+        public async void Cancel()
+        {
+            bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to cancel?", "Yes", "No");
+            if (confirm)
             {
-                messages += "Add an Item\n";
+                await NavigationService.GoBackAsync();
             }
-            else if(Product.ItemsUsed.Count(e=>e.Quantity==0 || string.IsNullOrEmpty(e.Type))>0)
-            {
-                messages += "Enter 'Quantity' and 'Type' of every Item\n";
-            }
-            if(Product.ProfitPercent==0)
-            {
-                messages += "Enter the Profit %\n";
-            }
-            if(string.IsNullOrEmpty(Product.Name))
-            {
-                messages += "Enter the Name of the Product";
-            }
-            if(!string.IsNullOrEmpty(messages))
-            {
-                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
-                return;
-            }
-            Product.Items = JsonConvert.SerializeObject(Product.ItemsUsed);
-            int add = App.DbHelper.SaveProduct(Product);
-            await DialogService.DisplayAlertAsync("Success", "Product added Successfully","Ok");
-            Xamarin.Forms.MessagingCenter.Send<Product>(Product, "added");
-            await NavigationService.GoBackAsync();
         }
 
         public async void AddItem()
@@ -224,12 +241,26 @@ namespace PriceCalculator.ViewModels
                 Product.CostPrice = 0;
         }
 
-
-
-        public void Share()
+        public async override void OnNavigatedTo(INavigationParameters parameters)
         {
-            Xamarin.Forms.DependencyService.Get<IShareHelper>().SharePicture(Product.ImgName,Product.SellingPrice,Product.Name);
-                
+            base.OnNavigatedTo(parameters);
+            CategoryList = await App.DbHelper.GetAllCategory();
+        }
+
+        public async void OnCategoryChanged(Category category)
+        {
+            if (category != null)
+            {
+                Product.Category = category.Name;
+                ItemList = new List<Item>(await App.DbHelper.GetAllItems(category.Id.ToString()));
+                if (ItemList != null && ItemList.Count > 0)
+                {
+                    foreach (Item item in ItemList)
+                    {
+                        Product.ItemsUsed.Add(new ItemUsed() { ItemSelected = item });
+                    }
+                }
+            }
         }
     }
 }

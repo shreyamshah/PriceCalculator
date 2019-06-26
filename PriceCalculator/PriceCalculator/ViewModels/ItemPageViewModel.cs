@@ -22,7 +22,7 @@ namespace PriceCalculator.ViewModels
         {
             if(obj != null && category!=null)
             {
-                GetAllItems(category.Name);
+                GetAllItems(category.Id.ToString());
             }
         }
 
@@ -30,10 +30,11 @@ namespace PriceCalculator.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("Category", category);
-            NavigationService.NavigateAsync("ItemAddPage",parameters);
+            NavigationService.NavigateAsync("ItemAddPage",parameters,true,true);
         }
 
         public DelegateCommand AddItemCommand { get; set; }
+
         private ObservableCollection<Item> itemsList;
         public ObservableCollection<Item> ItemsList
         {
@@ -41,14 +42,36 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref itemsList, value); }
         }
 
-        Category category;
-
-        public void GetAllItems(string category)
+        private Item item;
+        public Item Item
         {
-            ItemsList = new ObservableCollection<Item>(App.DbHelper.GetAllItems(category));
+            get { return item; }
+            set
+            {
+                SetProperty(ref item, value);
+                if(item != null)
+                {
+                    GoToEditPage(item);
+                    item = null;
+                }
+            }
         }
 
-        public override void OnNavigatedTo(NavigationParameters parameters)
+        Category category;
+
+        public async void GetAllItems(string category)
+        {
+            ItemsList = new ObservableCollection<Item>(await App.DbHelper.GetAllItems(category));
+        }
+
+        public async void GoToEditPage(Item items)
+        {
+            NavigationParameters parameters = new NavigationParameters();
+            parameters.Add("item", items);
+            await NavigationService.NavigateAsync("ItemEditPage", parameters,true,true);
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
             if(parameters.ContainsKey("category"))

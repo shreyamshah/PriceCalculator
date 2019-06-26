@@ -43,9 +43,6 @@ namespace PriceCalculator.Data
             set { SetProperty(ref category, value); }
         }
 
-        [Column("itemUsed")]
-        public string Items { get; set; }
-
         private ObservableCollection<ItemUsed> itemsUsed;
         [Ignore]
         public ObservableCollection<ItemUsed> ItemsUsed
@@ -62,7 +59,11 @@ namespace PriceCalculator.Data
         public double CostPrice
         {
             get { return costPrice; }
-            set { SetProperty(ref costPrice, value); }
+            set
+            {
+                SetProperty(ref costPrice, value);
+                SellingPrice = costPrice * 100 / (100 - ((double)ProfitPercent));
+            }
         }
 
         private int profitPercent;
@@ -85,16 +86,54 @@ namespace PriceCalculator.Data
         public double SellingPrice
         {
             get { return sellingPrice; }
-            set { SetProperty(ref sellingPrice, value); }
+            set { SetProperty(ref sellingPrice, Math.Round(value,2)); }
         }
     }
 
+    [Table("itemsUsed")]
     public class ItemUsed : BindableBase
     {
         public ItemUsed()
         { }
+
+        private string id;
+        [Column("id"),PrimaryKey,AutoIncrement]
+        public string Id
+        {
+            get
+            {
+                return id;
+            }
+            set
+            {
+                SetProperty(ref id, value);
+            }
+        }
+
+        private string productId;
+        [Column("productId")]
+        public string ProductId
+        {
+            get
+            {
+                return productId;
+            }
+            set
+            {
+                SetProperty(ref productId, value);
+            }
+        }
+
+        private string itemId;
+        [Column("itemId")]
+        public string ItemId
+        {
+            get { return itemId; }
+            set { SetProperty(ref itemId, value); }
+        }
+
         private string type;
-        [JsonProperty("type")]
+        [Column("type")]
         public string Type
         {
             get { return type; }
@@ -102,7 +141,7 @@ namespace PriceCalculator.Data
         }
 
         private int quantity;
-        [JsonProperty("quantity")]
+        [Column("quantity")]
         public int Quantity
         {
             get { return quantity; }
@@ -114,7 +153,7 @@ namespace PriceCalculator.Data
         }
 
         private string unit;
-        [JsonProperty("unit")]
+        [Column("unit")]
         public string Unit
         {
             get { return unit; }
@@ -129,7 +168,7 @@ namespace PriceCalculator.Data
         }
 
         private double price;
-        [JsonProperty("price")]
+        [Column("price")]
         public double Price
         {
             get { return price; }
@@ -137,7 +176,7 @@ namespace PriceCalculator.Data
         }
 
         private double total;
-        [JsonProperty("total")]
+        [Column("total")]
         public double Total
         {
             get { return total; }
@@ -145,7 +184,7 @@ namespace PriceCalculator.Data
         }
 
         private Item itemSelected;
-        [JsonIgnore]
+        [Ignore]
         public Item ItemSelected
         {
             get { return itemSelected; }
@@ -154,8 +193,12 @@ namespace PriceCalculator.Data
                 SetProperty(ref itemSelected, value);
                 if (itemSelected != null)
                 {
+                    ItemId = itemSelected.Id;
                     Price = itemSelected.Rate;
-                    Unit = itemSelected.Unit;
+                    if (itemSelected.Unit.Equals("kg") && Unit != "kg")
+                        Unit = "grams";
+                    else
+                        Unit = itemSelected.Unit;
                     Type = itemSelected.Name;
                 }
             }

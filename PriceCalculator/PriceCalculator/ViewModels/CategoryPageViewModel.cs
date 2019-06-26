@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PriceCalculator.ViewModels
 {
@@ -18,7 +19,7 @@ namespace PriceCalculator.ViewModels
         {
             Xamarin.Forms.MessagingCenter.Subscribe<Category>(this, "added", OnCategoryAdded);
             AddCategoryCommand = new DelegateCommand(AddCategory);
-            GetAllCategory();
+            //GetAllCategory();
         }
 
 
@@ -40,7 +41,7 @@ namespace PriceCalculator.ViewModels
 
         public void AddCategory()
         {
-            NavigationService.NavigateAsync("CategoryAddPage");
+            NavigationService.NavigateAsync("CategoryAddPage",null,true,true);
         }
 
         public DelegateCommand AddItemCommand { get; set; }
@@ -63,9 +64,15 @@ namespace PriceCalculator.ViewModels
             }
         }
 
-        public void GetAllCategory()
+        public async void GetAllCategory()
         {
-            CategoryList = new ObservableCollection<Category>(App.DbHelper.GetAllCategory());
+            CategoryList = new ObservableCollection<Category>(await App.DbHelper.GetAllCategory());
+        }
+
+        public override void OnNavigatedTo(INavigationParameters parameters)
+        {
+            base.OnNavigatedTo(parameters);
+            GetAllCategory();
         }
     }
 }

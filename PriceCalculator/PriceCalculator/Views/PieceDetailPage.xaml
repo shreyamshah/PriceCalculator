@@ -1,11 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" Title="Detail"
              prism:ViewModelLocator.AutowireViewModel="True" x:Name="details"
              x:Class="PriceCalculator.Views.PieceDetailPage">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Share" Command="{Binding ShareImage}"/>
+        <ToolbarItem Text="Edit" Command="{Binding EditProduct}"/>
+        <ToolbarItem Icon="delete.png" Command="{Binding DeleteCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <AbsoluteLayout HorizontalOptions="FillAndExpand">
@@ -24,7 +26,7 @@
                     <Label Text="Category: " HeightRequest="30"/>
                     <Label Text="{Binding Category}" HeightRequest="30" HorizontalOptions="FillAndExpand"/>
                 </StackLayout>
-                <StackLayout HeightRequest="360">
+                <!--<StackLayout HeightRequest="360">
                     <ListView ItemsSource="{Binding ItemsUsed}" HasUnevenRows="True" SelectedItem="null">
                         <ListView.Header>
                             <Grid>
@@ -65,8 +67,8 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal" Margin="10,0,10,0" HorizontalOptions="EndAndExpand">
+                </StackLayout>-->
+                <!--<StackLayout Orientation="Horizontal" Margin="10,0,10,0" HorizontalOptions="EndAndExpand">
                     <Label Text="Total Cost: "/>
                     <Label Text="{Binding CostPrice,StringFormat='{0:c}'}"/>
                 </StackLayout>
@@ -77,7 +79,7 @@
                 <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                     <Label Text="Selling Price: "/>
                     <Label Text="{Binding SellingPrice,StringFormat='{0:c}'}" WidthRequest="50"/>
-                </StackLayout>
+                </StackLayout>-->
             </StackLayout>
             <!--</ScrollView>-->
             <Image Source="{Binding BindingContext.Product.ImgName,Source={x:Reference Name=details}}" IsVisible="{Binding BindingContext.IsFull,Source={x:Reference Name=details}}" Aspect="AspectFit" AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1" AbsoluteLayout.LayoutFlags="PositionProportional">

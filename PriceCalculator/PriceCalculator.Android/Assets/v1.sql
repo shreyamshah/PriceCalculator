@@ -2,10 +2,9 @@ CREATE TABLE IF NOT EXISTS `product` (
 	`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
 	`name`	TEXT,
 	`category`	TEXT,
-	`itemUsed`	TEXT,
-	`costPrice`	NUMERIC,
+	`costPrice`	REAL,
 	`profitPercent`	NUMERIC,
-	`sellingPrice`	NUMERIC,
+	`sellingPrice`	REAL,
 	`imgName`	TEXT
 );
 CREATE TABLE IF NOT EXISTS `party` (
@@ -17,9 +16,19 @@ CREATE TABLE IF NOT EXISTS `item` (
 	`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
 	`categoryId`	TEXT,
 	`name`	TEXT,
-	`rate`	INTEGER,
+	`rate`	REAL,
 	`unit`	TEXT
 );
+CREATE TABLE IF NOT EXISTS `itemsUsed` (
+	`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+	`productId` TEXT,
+	`itemId` TEXT,
+	`type` TEXT,
+	`quantity` INTEGER,
+	`unit` TEXT,
+	`price` REAL,
+	`total` REAL
+); 
 CREATE TABLE IF NOT EXISTS `category` (
 	`id`	INTEGER PRIMARY KEY AUTOINCREMENT,
 	`name`	TEXT

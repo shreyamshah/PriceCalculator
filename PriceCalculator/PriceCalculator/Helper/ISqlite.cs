@@ -5,6 +5,6 @@ namespace PriceCalculator.Helpers
 {
     public interface ISqlite
     {
-        SQLiteConnection GetConnection();
+        SQLiteAsyncConnection GetConnection();
     }
 }

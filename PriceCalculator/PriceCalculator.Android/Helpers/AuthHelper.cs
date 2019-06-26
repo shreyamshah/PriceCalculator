@@ -24,7 +24,7 @@ namespace PriceCalculator.Droid.Helpers
             
         }
 
-        public void Authenticate()
+        public void Authenticate(int requestCode = 0)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace PriceCalculator.Droid.Helpers
                     if (intent != null)
                     {
                         //Android.App.Application.Context.StartActivity(intent);
-                        CrossCurrentActivity.Current.Activity.StartActivityForResult(intent, 0);
+                        CrossCurrentActivity.Current.Activity.StartActivityForResult(intent, requestCode);
                     }
                 }
             }

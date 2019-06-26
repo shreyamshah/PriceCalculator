@@ -54,16 +54,20 @@ namespace PriceCalculator.CustomControls
                 tab.Children.Add(scroll);
                 foreach (string item in tabs)
                 {
-                    Button button = new Button() { Text = item, HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = 20, HeightRequest = 50,BackgroundColor=Color.Transparent, };
+                    Button button = new Button() { Text = item, HorizontalOptions = LayoutOptions.FillAndExpand, FontSize = 20, HeightRequest = 50, BackgroundColor = Color.Transparent, };
                     //BoxView line = new BoxView() { WidthRequest = 1, Margin = new Thickness(5, 0, 0, 0), HeightRequest = label.Height, Color = Color.Black };
-      
+
                     button.Pressed += (sender, e) =>
                          {
-                             int index = tabs.IndexOf(tabs.Where((ex)=>ex.Equals(item)).FirstOrDefault());
+                             int index = tabs.IndexOf(tabs.Where((ex) => ex.Equals(item)).FirstOrDefault());
                              tab.Position = index.ToString();
                          };
                     stack.Children.Add(button);
                     //stack.Children.Add(line);
+                }
+                if (stack != null && stack.Children != null && stack.Children.Count > 0)
+                {
+                    (stack.Children[0] as Button).BackgroundColor = Color.Black;
                 }
             }
         }

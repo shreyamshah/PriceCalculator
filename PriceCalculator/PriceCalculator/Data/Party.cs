@@ -26,7 +26,7 @@ namespace PriceCalculator.Data
         }
 
         private int profitPercent;
-        [Column("profitPerecent")]
+        [Column("profitPercent")]
         public int ProfitPercent
         {
             get { return profitPercent; }

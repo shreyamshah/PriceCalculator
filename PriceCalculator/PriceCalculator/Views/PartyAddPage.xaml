@@ -4,15 +4,19 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="PriceCalculator.Views.PartyAddPage">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Save" Command="{Binding SavePartyCommand}"/>
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout Margin="10,30,10,0" HorizontalOptions="FillAndExpand" BindingContext="{Binding Party}">
-            <Label Text="Name"/>
-            <Entry Text="{Binding Name}"/>
-            <Label Text="Profit Percentage"/>
-            <Entry Text="{Binding ProfitPercent}" Keyboard="Numeric"/>
+        <StackLayout>
+            <StackLayout Style="{DynamicResource StackBlack}" Orientation="Horizontal">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" Style="{DynamicResource SelectedTab}" HorizontalOptions="StartAndExpand"/>
+                <Label Text="Add Party" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"/>
+                <Button Text="Save" Command="{Binding SaveCommand}" Style="{DynamicResource SelectedTab}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>
+            <StackLayout Margin="10,30,10,0" HorizontalOptions="FillAndExpand" BindingContext="{Binding Party}">
+                <Label Text="Name"/>
+                <Entry Text="{Binding Name}"/>
+                <Label Text="Profit Percentage"/>
+                <Entry Text="{Binding ProfitPercent}" Keyboard="Numeric"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>  
 </ContentPage>
