@@ -16,6 +16,7 @@ namespace PriceCalculator.ViewModels
         {
             UnitList = new List<string>() { "kg", "grams", "gross", "piece","dozen" };
             Item = new Item();
+            Item.Unit = "kg";
             SaveCommand = new DelegateCommand(SaveItemAsync);
             CancelCommand = new DelegateCommand(Cancel);
         }
@@ -58,7 +59,7 @@ namespace PriceCalculator.ViewModels
                     return;
                 }
                 await App.DbHelper.SaveItem(Item);
-                await DialogService.DisplayAlertAsync("Success", "Item saved SuccessFully", "Ok");
+                //await DialogService.DisplayAlertAsync("Success", "Item saved SuccessFully", "Ok");
                 Xamarin.Forms.MessagingCenter.Send<Item>(Item, "added");
                 await NavigationService.GoBackAsync();
             }

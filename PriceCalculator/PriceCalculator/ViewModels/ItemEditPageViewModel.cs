@@ -56,7 +56,7 @@ namespace PriceCalculator.ViewModels
                     return;
                 }
                 await App.DbHelper.SaveItem(Item);
-                await DialogService.DisplayAlertAsync("Success", "Item edited SuccessFully", "Ok");
+                //await DialogService.DisplayAlertAsync("Success", "Item edited SuccessFully", "Ok");
                 Xamarin.Forms.MessagingCenter.Send<Item>(Item, "added");
                 await NavigationService.GoBackAsync();
             }

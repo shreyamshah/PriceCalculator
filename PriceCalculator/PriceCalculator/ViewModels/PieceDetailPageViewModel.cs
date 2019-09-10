@@ -77,7 +77,7 @@ namespace PriceCalculator.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("piece", Product);
-            NavigationService.NavigateAsync("PieceEditPage", parameters,true,true);
+            NavigationService.NavigateAsync("PieceEditPage", parameters,true,false);
         }
 
         public async void Delete()

@@ -9,13 +9,14 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding ItemsList}" SelectedItem="{Binding Item,Mode=TwoWay}" Margin="10,10,0,0">
+            <ListView ItemsSource="{Binding ItemsList}" HasUnevenRows="True"  SelectedItem="{Binding Item,Mode=TwoWay}" Margin="10">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout BindingContext="{Binding .}">
+                            <StackLayout BindingContext="{Binding .}" Margin="10">
                                 <Label Text="{Binding Name}"/>
                                 <Label Text="{Binding Rate,StringFormat='{0:c}'}"/>
+                                <Label Text="{Binding Unit,Mode=TwoWay}"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>

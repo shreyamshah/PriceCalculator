@@ -110,36 +110,27 @@ namespace PriceCalculator.ViewModels
 
         public async void SaveProduct()
         {
+            string messages = "";
+            if (Product.ItemsUsed == null || (Product.ItemsUsed != null && Product.ItemsUsed.Count == 0))
+            {
+                messages += "Add an Item\n";
+            }
+            if (Product.ProfitPercent == 0)
+            {
+                messages += "Enter the Profit %\n";
+            }
+            if (string.IsNullOrEmpty(Product.Name))
+            {
+                messages += "Enter the Name of the Product";
+            }
+            if (!string.IsNullOrEmpty(messages))
+            {
+                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                return;
+            }
             bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to save?", "Yes", "No");
             if (confirm)
             {
-                string messages = "";
-                if (string.IsNullOrEmpty(Product.ImgName))
-                {
-                    messages += "Choose a Product Image\n";
-                }
-                if (Product.ItemsUsed == null || (Product.ItemsUsed != null && Product.ItemsUsed.Count == 0))
-                {
-                    messages += "Add an Item\n";
-                }
-                //else if(Product.ItemsUsed.Count(e=>e.Quantity==0 || string.IsNullOrEmpty(e.Type))>0)
-                //{
-                //messages += "Enter 'Quantity' and 'Type' of every Item\n";
-                //}
-                if (Product.ProfitPercent == 0)
-                {
-                    messages += "Enter the Profit %\n";
-                }
-                if (string.IsNullOrEmpty(Product.Name))
-                {
-                    messages += "Enter the Name of the Product";
-                }
-                if (!string.IsNullOrEmpty(messages))
-                {
-                    await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
-                    return;
-                }
-                //Product.Items = JsonConvert.SerializeObject(Product.ItemsUsed);
                 int add = await App.DbHelper.SaveProduct(Product);
                 foreach (var item in Product.ItemsUsed)
                 {
@@ -198,10 +189,10 @@ namespace PriceCalculator.ViewModels
         {
             base.OnNavigatedTo(parameters);
             CategoryList = await App.DbHelper.GetAllCategory();
-            if(parameters.ContainsKey("piece"))
+            if (parameters.ContainsKey("piece"))
             {
                 Product = parameters["piece"] as Product;
-                SelectedCategory = CategoryList.FirstOrDefault(e=>e.Name.Equals(Product.Category));
+                SelectedCategory = CategoryList.FirstOrDefault(e => e.Name.Equals(Product.Category));
                 ItemList = new List<Item>(await App.DbHelper.GetAllItems(SelectedCategory.Id.ToString()));
                 /*Product.ItemsUsed = JsonConvert.DeserializeObject<ObservableCollection<ItemUsed>>(Product.Items);*/
                 Product.ItemsUsed = new ObservableCollection<ItemUsed>(await App.DbHelper.GetAllItemUsed(Product.Id));
@@ -218,15 +209,19 @@ namespace PriceCalculator.ViewModels
             if (category != null && Product.Category != category.Name)
             {
                 ItemList = new List<Item>(await App.DbHelper.GetAllItems(category.Id.ToString()));
-                    Product.Category = category.Name;
-                    if (ItemList != null && ItemList.Count > 0)
+                Product.Category = category.Name;
+                if (ItemList != null && ItemList.Count > 0)
+                {
+                    for (int i = Product.ItemsUsed.Count - 1; i >= 0; i--)
                     {
-                        foreach (Item item in ItemList)
-                        {
-                            if(Product.ItemsUsed.Count(e=>e.Type.Equals(item.Name))==0)
-                                Product.ItemsUsed.Add(new ItemUsed() { ItemSelected = item });
-                        }
+                        Product.ItemsUsed.RemoveAt(i);
                     }
+                    foreach (Item item in ItemList)
+                    {
+                        if (Product.ItemsUsed.Count(e => e.Type.Equals(item.Name)) == 0)
+                            Product.ItemsUsed.Add(new ItemUsed() { ItemSelected = item });
+                    }
+                }
             }
         }
     }

@@ -18,8 +18,7 @@
                             <StackLayout Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                                 <Image Source="{Binding ImgName}" HeightRequest="100" WidthRequest="100"/>
                                 <StackLayout BindingContext="{Binding .}">
-                                    <Label Text="{Binding Category}"/>
-                                    <Label Text="{Binding Name}"/>
+                                    <Label Text="{Binding Name}" FontSize="Medium"/>
                                     <Label Text="{Binding SellingPrice,StringFormat='{0:c}'}"/>
                                 </StackLayout>
                             </StackLayout>

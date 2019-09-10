@@ -140,9 +140,9 @@ namespace PriceCalculator.Data
             set { SetProperty(ref type, value); }
         }
 
-        private int quantity;
+        private double quantity;
         [Column("quantity")]
-        public int Quantity
+        public double Quantity
         {
             get { return quantity; }
             set

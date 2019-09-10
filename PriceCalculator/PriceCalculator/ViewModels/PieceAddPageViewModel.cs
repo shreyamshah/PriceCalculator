@@ -33,7 +33,7 @@ namespace PriceCalculator.ViewModels
             Product = new Product();
             UnitList = new List<string>() { "kg", "grams", "gross", "piece" };
             SaveCommand = new DelegateCommand(SaveProduct);
-            CancelCommand = new DelegateCommand(Cancel);    
+            CancelCommand = new DelegateCommand(Cancel);
             Width = Hieght = 30;
             IsFull = false;
         }
@@ -68,7 +68,7 @@ namespace PriceCalculator.ViewModels
         }
 
         private List<Item> itemList;
-        public static Action<string,string> Success { get; set; }
+        public static Action<string, string> Success { get; set; }
 
         public List<Item> ItemList
         {
@@ -147,7 +147,7 @@ namespace PriceCalculator.ViewModels
                 IsFull = false;
             else
                 IsFull = true;
-            Success = (newFile,oldFile) =>
+            Success = (newFile, oldFile) =>
               {
                   Xamarin.Forms.DependencyService.Get<IFileHelper>().DeleteFile(oldFile);
                   Xamarin.Forms.DependencyService.Get<IFileHelper>().RenameFile(oldFile, newFile);
@@ -157,40 +157,32 @@ namespace PriceCalculator.ViewModels
 
         public async void SaveProduct()
         {
+            string messages = "";
+            if (Product.ItemsUsed == null || (Product.ItemsUsed != null && Product.ItemsUsed.Count == 0))
+            {
+                messages += "Add an Item\n";
+            }
+            if (Product.ProfitPercent == 0)
+            {
+                messages += "Enter the Profit %\n";
+            }
+            if (string.IsNullOrEmpty(Product.Name))
+            {
+                messages += "Enter the Name of the Product";
+            }
+            if (!string.IsNullOrEmpty(messages))
+            {
+                await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
+                return;
+            }
+
             bool confirm = await DialogService.DisplayAlertAsync("Confirm", "Do you want to save?", "Yes", "No");
             if (confirm)
             {
-                string messages = "";
-                if (string.IsNullOrEmpty(Product.ImgName))
-                {
-                    messages += "Choose a Product Image\n";
-                }
-                if (Product.ItemsUsed == null || (Product.ItemsUsed != null && Product.ItemsUsed.Count == 0))
-                {
-                    messages += "Add an Item\n";
-                }
-                //else if(Product.ItemsUsed.Count(e=>e.Quantity==0 || string.IsNullOrEmpty(e.Type))>0)
-                //{
-                //messages += "Enter 'Quantity' and 'Type' of every Item\n";
-                //}
-                if (Product.ProfitPercent == 0)
-                {
-                    messages += "Enter the Profit %\n";
-                }
-                if (string.IsNullOrEmpty(Product.Name))
-                {
-                    messages += "Enter the Name of the Product";
-                }
-                if (!string.IsNullOrEmpty(messages))
-                {
-                    await DialogService.DisplayAlertAsync("Alert", messages, "Ok");
-                    return;
-                }
-                //Product.Items = JsonConvert.SerializeObject(Product.ItemsUsed);
                 int add = await App.DbHelper.SaveProduct(Product);
                 foreach (var item in Product.ItemsUsed)
                 {
-                    if(item.Quantity>0)
+                    if (item.Quantity > 0)
                     {
                         item.ProductId = Product.Id;
                         await App.DbHelper.SaveItemUsed(item);
@@ -213,7 +205,7 @@ namespace PriceCalculator.ViewModels
 
         public async void AddItem()
         {
-            if(!string.IsNullOrEmpty(Product.Category))
+            if (!string.IsNullOrEmpty(Product.Category))
             {
                 if (Product.ItemsUsed == null)
                     Product.ItemsUsed = new ObservableCollection<ItemUsed>();
@@ -255,6 +247,11 @@ namespace PriceCalculator.ViewModels
                 ItemList = new List<Item>(await App.DbHelper.GetAllItems(category.Id.ToString()));
                 if (ItemList != null && ItemList.Count > 0)
                 {
+                    for (int i = Product.ItemsUsed.Count - 1; i >= 0; i--)
+                    {
+                        Product.ItemsUsed.RemoveAt(i);
+                    }
+
                     foreach (Item item in ItemList)
                     {
                         Product.ItemsUsed.Add(new ItemUsed() { ItemSelected = item });

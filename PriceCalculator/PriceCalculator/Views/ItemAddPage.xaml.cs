@@ -8,5 +8,10 @@ namespace PriceCalculator.Views
         {
             InitializeComponent();
         }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ItemName.Focus();
+        }
     }
 }

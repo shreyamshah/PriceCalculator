@@ -20,6 +20,7 @@ namespace PriceCalculator.Droid
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            this.ActionBar.SetIcon(null);
             CrossCurrentActivity.Current.Init(this, bundle);
             global::Xamarin.Forms.Forms.Init(this, bundle);
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();

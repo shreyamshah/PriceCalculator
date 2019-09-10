@@ -13,11 +13,11 @@
             </StackLayout>
             <StackLayout BindingContext="{Binding Item}" Margin="10,10,0,0">
                 <Label Text="Name"/>
-                <Entry Text="{Binding Name}"/>
+                <Entry x:Name="ItemName" Text="{Binding Name}" />
                 <Label Text="Rate"/>
                 <Entry Text="{Binding Rate}" Keyboard="Numeric"/>
                 <Label Text="Unit"/>
-                <Picker SelectedItem="{Binding Unit}" ItemsSource="{Binding BindingContext.UnitList,Source={x:Reference Name=itemAdd}}"/>
+                <Picker ItemsSource="{Binding BindingContext.UnitList,Source={x:Reference Name=itemAdd}}" SelectedItem="{Binding Unit}" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
