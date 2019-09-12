@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PriceCalculator.Views.Components.ProductCardView">
+  <ContentView.Content>
+      <StackLayout Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BindingContext="{Binding .}">
+            <Image Source="{Binding ImgName}" HeightRequest="100" WidthRequest="100" Aspect="AspectFit"/>
+            <StackLayout>
+                <Label Text="{Binding Category}"/>
+                <Label Text="{Binding Name}"/>
+                <Label Text="{Binding SellingPrice,StringFormat='{0:c}'}"/>
+            </StackLayout>
+        </StackLayout>
+  </ContentView.Content>
+</ContentView>

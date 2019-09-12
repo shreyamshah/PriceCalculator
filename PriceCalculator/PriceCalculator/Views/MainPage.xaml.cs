@@ -9,9 +9,17 @@ namespace PriceCalculator.Views
 {
 	public partial class MainPage : ContentPage
 	{
-		public MainPage ()
-		{
-			InitializeComponent ();
-		}
-	}
+        public MainPage()
+        {
+            try
+            {
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+    }
 }

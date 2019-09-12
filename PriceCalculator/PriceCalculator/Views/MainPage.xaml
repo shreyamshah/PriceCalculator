@@ -2,6 +2,10 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:Custom="clr-namespace:PriceCalculator.CustomControls;assembly=PriceCalculator"
+             xmlns:CardView="clr-namespace:PriceCalculator.Views.Components"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             xmlns:event="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True" x:Name="main"
              x:Class="PriceCalculator.Views.MainPage" Title="Product">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="+" Command="{Binding AddCommand}"/>
@@ -9,23 +13,18 @@
     <ContentPage.Content>
         <StackLayout>
             <Custom:Tabs ItemSource="{Binding Categories}" Position="{Binding Position}"/>
+            <ActivityIndicator IsVisible="{Binding IsFetching}" IsRunning="{Binding IsFetching}"/>
             <!--<Views:CarouselViewControl ItemsSource="{Binding Categories}" Position="{Binding Position}" ShowArrows="False" ShowIndicators="False" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>-->
             <SearchBar Text="{Binding SearchText}" SearchCommand="{Binding SearchProductCommand}" HeightRequest="30" HorizontalOptions="FillAndExpand" Placeholder="Search Products"/>
-            <ListView ItemsSource="{Binding ProductsList}" Margin="10,10,0,0"  SelectedItem="{Binding SelectedProduct}" HasUnevenRows="True">
+            <Custom:AdvancedListView ItemsSource="{Binding ProductsList}" GetData="{Binding GetAllProducts}" Position="{Binding Position}" Margin="10,10,0,0" SelectedItem="{Binding SelectedProduct}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                                <Image Source="{Binding ImgName}" HeightRequest="100" WidthRequest="100"/>
-                                <StackLayout BindingContext="{Binding .}">
-                                    <Label Text="{Binding Name}" FontSize="Medium"/>
-                                    <Label Text="{Binding SellingPrice,StringFormat='{0:c}'}"/>
-                                </StackLayout>
-                            </StackLayout>
+                            <CardView:ProductCardView BindingContext="{Binding .}"/>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </Custom:AdvancedListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

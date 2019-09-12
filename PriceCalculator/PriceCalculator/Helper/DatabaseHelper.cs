@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PriceCalculator.Data;
 using SQLite;
 
@@ -11,27 +12,28 @@ namespace PriceCalculator.Helper
 {
     public class DatabaseHelper
     {
-        public async Task<List<Product>> GetAllProducts(string category="")
+        public async Task<List<Product>> GetAllProducts(string category="",int start=0)
         {
             if (App.Connection != null)
             {
                 string query = $"select * from product";
                 if (!string.IsNullOrEmpty(category))
+                {
                     query += $" where category='{category}'";
-                query += " order by id";
+                    query += $" order by id desc limit {start},10";
+                }
                 try
                 {
                     List<Product> res = await App.Connection.QueryAsync<Product>(query);
                     //await App.Connection.CloseAsync();
                     return res;
                 }
-                catch ( Exception ex )
+                catch (Exception ex)
                 {
 
-                    throw;
                 }
             }
-            return null;
+            return new List<Product>();
         }
         /// <summary>
         /// Saves Product
@@ -214,13 +216,13 @@ namespace PriceCalculator.Helper
             }
         }
 
-        public async Task<List<Info>> GetScriptsLoaded(string value="script")
+        public async Task<List<Info<string>>> GetScriptsLoaded(string value="script")
         {
             if(App.Connection!=null)
             {
                 try
                 {
-                    List<Info> info = await App.Connection.QueryAsync<Info>($"select * from info where value = '{value}'");
+                    List<Info<string>> info = await App.Connection.QueryAsync<Info<string>>($"select * from info where value = '{value}'");
                     //await App.Connection.CloseAsync();
                     return info;
                 }
@@ -229,16 +231,21 @@ namespace PriceCalculator.Helper
                     
                 }
             }
-            return new List<Info>();
+            return new List<Info<string>>();
         }
 
-        public async Task SaveInfo(string key,string value)
+        public async Task SaveInfo<T>(string key,T value) where T:class
         {
             if(App.Connection!=null)
             {
                 try
                 {
-                    await App.Connection.ExecuteAsync("insert into info values (?,?)", key, value);
+                    string stringVal;
+                    if (typeof(T) != typeof(string))
+                        stringVal = JsonConvert.SerializeObject(value).ToString();
+                    else
+                        stringVal = value.ToString();
+                    await App.Connection.ExecuteAsync("insert into info values (?,?)", key, stringVal);
                 }
                 catch (Exception)
                 {
@@ -246,6 +253,17 @@ namespace PriceCalculator.Helper
                     throw;
                 }
             }
+        }
+
+        public async Task<T> GetInfo<T>(string key) where T:class
+        {
+            if(App.Connection!=null)
+            {
+                List<Info<T>> info = await App.Connection.QueryAsync<Info<T>>($"select * from info where key == '{key}'");
+                if (info != null && info.Count>0)
+                    return info.FirstOrDefault().value;
+            }
+            return null;
         }
 
         public async Task<int> GetTableCount()
