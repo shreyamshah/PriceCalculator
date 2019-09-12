@@ -4,6 +4,11 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              prism:ViewModelLocator.AutowireViewModel="True" Title="Settings"
              x:Class="PriceCalculator.Views.SettingsPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="page2" VerticalOptions="Center"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
     <StackLayout>
         <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="White"/>
         <Button Text="View Categories" Command="{Binding ViewItem}"/>

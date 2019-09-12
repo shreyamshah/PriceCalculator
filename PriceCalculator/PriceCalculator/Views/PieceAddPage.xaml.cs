@@ -13,6 +13,7 @@ namespace PriceCalculator.Views
             }
             catch (Exception ex)
             {
+               
             }
         }
     }

@@ -30,7 +30,7 @@ namespace PriceCalculator.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("Category", category);
-            NavigationService.NavigateAsync("ItemAddPage",parameters,true,true);
+            NavigationService.NavigateAsync("ItemAddPage",parameters,true,false);
         }
 
         public DelegateCommand AddItemCommand { get; set; }
@@ -52,7 +52,6 @@ namespace PriceCalculator.ViewModels
                 if(item != null)
                 {
                     GoToEditPage(item);
-                    item = null;
                 }
             }
         }
@@ -68,7 +67,7 @@ namespace PriceCalculator.ViewModels
         {
             NavigationParameters parameters = new NavigationParameters();
             parameters.Add("item", items);
-            await NavigationService.NavigateAsync("ItemEditPage", parameters,true,true);
+            await NavigationService.NavigateAsync("ItemEditPage", parameters,true,false);
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)

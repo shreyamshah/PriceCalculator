@@ -12,3 +12,4 @@ PriceCalculator/PriceCalculator.UWP/obj/
 
 /PriceCalculator/PriceCalculator/PriceCalculator.csproj.user
 /PriceCalculator/PriceCalculator/Properties/PublishProfiles
+/PriceCalculator/PriceCalculator.Android/google-services.json

@@ -108,7 +108,7 @@ namespace PriceCalculator.ViewModels
 
         public async void Add()
         {
-            await NavigationService.NavigateAsync("PieceAddPage",null,true,true);
+            await NavigationService.NavigateAsync("PieceAddPage",null,true,false);
         }
 
         public async void GetAllProduct(object start)
