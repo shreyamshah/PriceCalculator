@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using Prism.Navigation;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace PriceCalculator
@@ -26,24 +27,34 @@ namespace PriceCalculator
          */
         public static SQLiteAsyncConnection Connection;
         public static DatabaseHelper DbHelper;
-
         public App(IPlatformInitializer initializer = null ) : base(initializer) { }
         protected override void OnInitialized()
         {
-            InitializeComponent();
-            DbHelper = new DatabaseHelper();
-            GetConnection();
+            try
+            {
+                InitializeComponent();
+                DbHelper = new DatabaseHelper();
+                GetConnection();
+            }
+            catch ( Exception ex)
+            {
+                throw ex;
+            }
         }
 
         protected async override void OnStart()
         {
             base.OnStart();
+            bool isFirst = true;
             List<string> sqlFiles = TableInfo.Tables;
             if (sqlFiles != null && sqlFiles.Count > 0)
             {
-                List<Info> sqlexecuted = new List<Info>();
+                List<Info<string>> sqlexecuted = new List<Info<string>>();
                 if (await App.DbHelper.GetTableCount() > 1)
+                {
                     sqlexecuted = await App.DbHelper.GetScriptsLoaded();
+                    isFirst = false;
+                }
                 foreach (string item in sqlFiles)
                 {
                     if (sqlexecuted != null && sqlexecuted.Count(e => e.key.Equals(item)) == 0)
@@ -65,6 +76,10 @@ namespace PriceCalculator
                     //await App.Connection.CloseAsync();
                 }
             }
+            if(isFirst)
+            {
+                await DbHelper.SaveInfo("imageCompress", bool.TrueString);
+            }
             Authenticate();
             await NavigationService.NavigateAsync("LoginPage");            
             Xamarin.Forms.MessagingCenter.Subscribe<ActivityResult>(this, "success", Navigate);
@@ -73,7 +88,17 @@ namespace PriceCalculator
         public async void Navigate(ActivityResult obj)
         {
             if (obj.ResultCode.ToString() == "Ok")
-                await NavigationService.NavigateAsync("//MasterPage/NavigationPage/MainPage");
+            {
+                string res = await DbHelper.GetInfo<string>("imageCompress");
+                if (res == bool.TrueString)
+                    await NavigationService.NavigateAsync("//MasterPage/NavigationPage/MainPage");
+                else
+                {
+                    NavigationParameters parameters = new NavigationParameters();
+                    parameters.Add("imageCompress", true);
+                    await NavigationService.NavigateAsync("//NavigationPage/UpgradePage", parameters);
+                }
+            }
             else if (obj.ResultCode.ToString() == "Cancel")
                 Xamarin.Forms.DependencyService.Get<ISystemHelper>().CloseApp();
         }
@@ -107,6 +132,7 @@ namespace PriceCalculator
             containerRegistry.RegisterForNavigation<PieceEditPage, PieceEditPageViewModel>();
             containerRegistry.RegisterForNavigation<ItemEditPage, ItemEditPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage>();
+            containerRegistry.RegisterForNavigation<UpgradePage, UpgradePageViewModel>();
         }
     }
 }

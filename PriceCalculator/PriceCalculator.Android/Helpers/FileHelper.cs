@@ -20,6 +20,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using PCLStorage;
 using Plugin.CurrentActivity;
 using Plugin.FilePicker.Abstractions;
+using Plugin.Permissions.Abstractions;
 using PriceCalculator.Droid.Helpers;
 using PriceCalculator.Helper;
 using Xamarin.Forms;
@@ -72,14 +73,21 @@ namespace PriceCalculator.Droid.Helpers
                 var path = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "priceCalculator.sqlite");
                 if (File.Exists(path))
                 {
+                    PermissionStatus status = await Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Storage);
+                    if (!status.Equals(PermissionStatus.Granted))
+                        await Plugin.Permissions.CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Storage);
                     if (App.Connection != null)
                         await App.Connection.CloseAsync();
                     FileStream fsOut = File.Create(Path.Combine(Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).Path, "price_backup.zip"));
                     ZipOutputStream zipStream = new ZipOutputStream(fsOut);
+                    //FastZip zip = new FastZip();
+                    //zip.CreateZip( "price_backup.zip",Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).Path,true,null);
+                    //zip.CreateEmptyDirectories = true;
                     zipStream.SetLevel(6);
                     zipStream.Password = "backup";
-                    FileInfo db = new FileInfo(path);
+                    //FileInfo db = new FileInfo(path);
                     ZipEntry dbEntry = new ZipEntry(ZipEntry.CleanName(path.Split("/").LastOrDefault()));
+                    //zip.
                     zipStream.PutNextEntry(dbEntry);
                     byte[] dbBuffer = new byte[4096];
                     using (FileStream streamReader = File.OpenRead(path))
@@ -87,21 +95,28 @@ namespace PriceCalculator.Droid.Helpers
                         StreamUtils.Copy(streamReader, zipStream, dbBuffer);
                     }
                     zipStream.CloseEntry();
-                    string imgDir = Path.Combine(CrossCurrentActivity.Current.AppContext.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).Path);
+                    string imgDir = CrossCurrentActivity.Current.AppContext.GetExternalFilesDir(null).Path;
                     if (Directory.Exists(imgDir))
                     {
-                        string[] files = Directory.GetFiles(imgDir);
+                        string[] files = Directory.GetDirectories(imgDir);
                         foreach (var item in files)
                         {
-                            FileInfo info = new FileInfo(item);
-                            ZipEntry entry = new ZipEntry(ZipEntry.CleanName(item.Split("/").LastOrDefault()));
-                            zipStream.PutNextEntry(entry);
-                            byte[] buffer = new byte[4096];
-                            using (FileStream streamReader = File.OpenRead(item))
+                            if (!item.Contains("override"))
                             {
-                                StreamUtils.Copy(streamReader, zipStream, buffer);
+                                string folderName = ZipEntry.CleanName(item.Split("/").LastOrDefault());
+                                string[] file = Directory.GetFiles(item);
+                                foreach (var fileName in file)
+                                {
+                                    ZipEntry zipEntry = new ZipEntry(ZipEntry.CleanName(folderName + "/" + fileName.Split("/").LastOrDefault()));
+                                    byte[] buffer = new byte[4096];
+                                    zipStream.PutNextEntry(zipEntry);
+                                    using (FileStream fileReader = File.OpenRead(fileName))
+                                    {
+                                        StreamUtils.Copy(fileReader, zipStream, buffer);
+                                    }
+                                    zipStream.CloseEntry();
+                                }
                             }
-                            zipStream.CloseEntry();
                         }
                     }
                     zipStream.IsStreamOwner = true; // Makes the Close also Close the underlying stream
@@ -126,46 +141,45 @@ namespace PriceCalculator.Droid.Helpers
             //resolvedPath = Android.App.Application.Context.ApplicationContext.ContentResolver.OpenOutputStream(Android.Net.Uri.Parse(zipFile.FilePath));
             Stream fileStream = new MemoryStream(data);
             ZipFile zf = new ZipFile(fileStream);
-                zf.Password = "backup";
-                if (!zf.GetEntry("priceCalculator.sqlite").Name.Equals("priceCalculator.sqlite"))
-                    return false;
-                if (App.Connection != null)
-                    await App.Connection.CloseAsync();
-                List<string> files = Directory.GetFiles(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal)).ToList();
-                List<string> pics = Directory.GetFiles(CrossCurrentActivity.Current.AppContext.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).Path).ToList();
-                files.AddRange(pics);
-                foreach (var item in files)
+            zf.Password = "backup";
+            if (!zf.GetEntry("priceCalculator.sqlite").Name.Equals("priceCalculator.sqlite"))
+                return false;
+            if (App.Connection != null)
+                await App.Connection.CloseAsync();
+            List<string> folders = Directory.GetDirectories(CrossCurrentActivity.Current.AppContext.GetExternalFilesDir(null).Path).ToList();
+            //files.AddRange(pics);
+            //files.AddRange(compressedPics);
+            foreach (var item in folders)
+            {
+                if (!item.Contains("override"))
+                    Directory.Delete(item, true);
+            }
+            foreach (ZipEntry item in zf)
+            {
+                string fileName = item.Name;
+                byte[] buffer = new byte[4096];
+                Stream stream = zf.GetInputStream(item);
+                string fullZipToPath = null;
+                if (item.Name.Contains(".sqlite"))
                 {
-                    File.Delete(item);
+                    fullZipToPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), fileName);
                 }
-                foreach (ZipEntry item in zf)
+                else
                 {
-                    string fileName = item.Name;
-                    byte[] buffer = new byte[4096];
-                    Stream stream = zf.GetInputStream(item);
-                    string fullZipToPath = null;
-                    if (item.Name.Contains(".sqlite"))
-                    {
-                        fullZipToPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), fileName);
-                    }
-                    else if (item.Name.Contains(".jpg"))
-                    {
-                        fullZipToPath = Path.Combine(CrossCurrentActivity.Current.AppContext.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).Path, fileName);
-                    }
-                    else
-                        return false;
-                    string directoryName = Path.GetDirectoryName(fullZipToPath);
-                    if (directoryName.Length > 0)
-                        Directory.CreateDirectory(directoryName);
-                    using (FileStream streamWriter = File.Create(fullZipToPath))
-                    {
-                        StreamUtils.Copy(stream, streamWriter, buffer);
-                    }
+                    fullZipToPath = CrossCurrentActivity.Current.AppContext.GetExternalFilesDir(null).Path + "/" + fileName;
                 }
-                return true;
+                string directoryName = Path.GetDirectoryName(fullZipToPath);
+                if (directoryName.Length > 0 && !Directory.Exists(directoryName))
+                    Directory.CreateDirectory(directoryName);
+                using (FileStream streamWriter = File.Create(fullZipToPath))
+                {
+                    StreamUtils.Copy(stream, streamWriter, buffer);
+                }
+            }
+            return true;
             //}
             //else
-           // {
+            // {
             //}
             //await Task.Delay(5000);
             //return false;

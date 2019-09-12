@@ -7,15 +7,8 @@ using SQLite;
 namespace PriceCalculator.Data
 {
     [Table("item")]
-    public class Item : BindableBase
+    public class Item : Entity
     {
-        private string id;
-        [Column("id"),PrimaryKey,AutoIncrement]
-        public string Id
-        {
-            get { return id; }
-            set { SetProperty(ref id, value); }
-        }
 
         private string categoryId;
         [Column("categoryId")]

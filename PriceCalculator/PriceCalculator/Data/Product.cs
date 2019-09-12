@@ -10,14 +10,12 @@ using SQLite;
 namespace PriceCalculator.Data
 {
     [Table("product")]
-    public class Product : BindableBase
+    public class Product : Entity
     {
         public Product()
         {
             ItemsUsed = new ObservableCollection<ItemUsed>();
         }
-        [Column("id"), AutoIncrement, PrimaryKey]
-        public string Id { get; set; }
 
         private string name;
         [Column("name")]

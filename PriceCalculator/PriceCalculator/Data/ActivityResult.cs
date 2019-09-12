@@ -11,4 +11,14 @@ namespace PriceCalculator.Data
         public object ResultCode { get; set; }
         public object Data { get; set; }
     }
+
+    public class Paging
+    {
+        int start, pageSize;
+        public Paging()
+        {
+            start = 0;
+            pageSize = 10;
+        }
+    }
 }

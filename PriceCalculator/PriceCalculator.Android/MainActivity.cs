@@ -1,9 +1,13 @@
-﻿using Android.App;
+﻿using System;
+using System.Threading.Tasks;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using Android.Support.V4.App;
 using Com.Theartofdev.Edmodo.Cropper;
+using Crashlytics;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 using PriceCalculator.Data;
@@ -25,10 +29,12 @@ namespace PriceCalculator.Droid
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.SetVmPolicy(builder.Build());
             Rg.Plugins.Popup.Popup.Init(this, bundle);
-            Fabric.Fabric.With(this, new Crashlytics.Crashlytics());
             Stormlion.ImageCropper.Droid.Platform.Init();
-
             LoadApplication(new App());
+            Fabric.Fabric.With(this, new Crashlytics.Crashlytics());
+            Crashlytics.Crashlytics.HandleManagedExceptions();
+            AppDomain.CurrentDomain.UnhandledException += (object sender, UnhandledExceptionEventArgs e) =>
+    Crashlytics.Crashlytics.LogException(MonoExceptionHelper.Create(e.ExceptionObject as Exception));
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults)
         {
@@ -48,12 +54,12 @@ namespace PriceCalculator.Droid
             {
                 if (resultCode == Result.Canceled)
                 {
-                    Xamarin.Forms.MessagingCenter.Send(new ActivityResult { RequestCode = (int)resultCode, ResultCode = resultCode, Data = data }, ActivityResult.key);
+                    Xamarin.Forms.MessagingCenter.Send(new ActivityResult { RequestCode = requestCode, ResultCode = resultCode, Data = data }, ActivityResult.key);
                 }
             }
             else if(requestCode == 1)
             {
-                Xamarin.Forms.MessagingCenter.Send(new ActivityResult { RequestCode = (int)resultCode, ResultCode = resultCode, Data = data }, "success");
+                Xamarin.Forms.MessagingCenter.Send(new ActivityResult { RequestCode = requestCode, ResultCode = resultCode, Data = data }, "success");
             }
             else
             {
@@ -75,6 +81,11 @@ namespace PriceCalculator.Droid
             {
                 base.OnBackPressed();
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
         }
     }
 

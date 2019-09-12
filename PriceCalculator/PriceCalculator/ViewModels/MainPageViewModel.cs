@@ -1,5 +1,6 @@
 ﻿using PCLStorage;
 using PriceCalculator.Data;
+using PriceCalculator.Helper;
 using Prism;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -24,10 +25,15 @@ namespace PriceCalculator.ViewModels
             Xamarin.Forms.MessagingCenter.Subscribe<Product>(this, "added", OnProductAdded);
             //Position = 0;
             SearchProductCommand = new DelegateCommand(SearchProduct);
+            GetAllProducts = new DelegateCommand<object>(GetAllProduct);
+            ProductsList = new ObservableCollection<Product>();
+            IsFetching = false;
+            hasMore = true;
         }
 
         #region Property
         public DelegateCommand AddCommand { get; set; }
+        public DelegateCommand<object> GetAllProducts { get; set; }
 
         private ObservableCollection<Product> productsList;
         public ObservableCollection<Product> ProductsList
@@ -35,7 +41,7 @@ namespace PriceCalculator.ViewModels
             get { return productsList; }
             set { SetProperty(ref productsList, value); }
         }
-
+        bool hasMore;
         private Product selectedProduct;
         public Product SelectedProduct
         {
@@ -59,15 +65,18 @@ namespace PriceCalculator.ViewModels
             set { SetProperty(ref categories, value); }
         }
 
-        private int position;
-        public int Position
+        private int? position;
+        public int? Position
         {
             get { return position; }
             set
             {
                 SetProperty(ref position, value);
-                if (Categories != null && Categories.Count > 0)
-                    GetAllProducts(Categories[position]);
+                //if (Categories != null && Categories.Count > 0)
+                //{
+                    //ProductsList = new ObservableCollection<Product>();
+                    //GetAllProduct(0);
+                //}
             }
         }
 
@@ -84,6 +93,14 @@ namespace PriceCalculator.ViewModels
                 }
             }
         }
+
+        private bool isFetching;
+        public bool IsFetching
+        {
+            get { return isFetching; }
+            set { SetProperty(ref isFetching, value); }
+        }
+
         private ObservableCollection<Product> tempList;
         public DelegateCommand SearchProductCommand { get; set; }
 
@@ -94,24 +111,52 @@ namespace PriceCalculator.ViewModels
             await NavigationService.NavigateAsync("PieceAddPage",null,true,true);
         }
 
-        public async void GetAllProducts(string category)
+        public async void GetAllProduct(object start)
         {
-            ProductsList = new ObservableCollection<Product>(await App.DbHelper.GetAllProducts(category));
-            tempList = ProductsList;
+            if (hasMore)
+            {
+                IsFetching = true;
+                if (Position.HasValue)
+                {
+                    List<Product> temp = ProductsList.ToList();
+                    if (Categories != null && Categories.Count > 0)
+                    {
+                        string imgPath = Xamarin.Forms.DependencyService.Get<IImageHelper>().GetCompressImagePath();
+                        List<Product> list = await App.DbHelper.GetAllProducts(Categories?[Position.Value], ProductsList.Count);
+                        if (list.Count == 0)
+                            hasMore = false;
+                        list.ForEach((Product p) =>
+                        {
+                            if (p.ImgName.Split('/').Count() == 1)
+                                p.ImgName = imgPath + "/" + p.ImgName;
+                        });
+                        temp.AddRange(list);
+                        ProductsList = new ObservableCollection<Product>(temp);
+                        tempList = ProductsList;
+                        SearchProduct();
+                    }
+                }
+                IsFetching = false;
+            }
         }
 
         public void OnProductAdded(Product obj)
         {
             if(obj != null)
             {
-                if(Categories != null && Categories.Count>0)
-                    GetAllProducts(Categories[Position]);
+                if (Categories != null && Categories.Count > 0)
+                {
+                    ProductsList = new ObservableCollection<Product>();
+                    hasMore = true;
+                    GetAllProduct(0);
+                }
             }
         }
 
         public void SearchProduct()
         {
-                ProductsList = new ObservableCollection<Product>(tempList.Where(e => e.Name.ToLower().Contains(SearchText.ToLower())));
+            if(!string.IsNullOrEmpty(SearchText) && tempList!=null && tempList.Count>0)
+                ProductsList = new ObservableCollection<Product>(tempList?.Where(e => e.Name.ToLower().Contains(SearchText.ToLower())));
         }
         public async Task<List<Category>> GetAllCategories()
         {

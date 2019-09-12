@@ -128,7 +128,6 @@ namespace PriceCalculator.ViewModels
                     await DialogService.DisplayAlertAsync("No Camera", " No camera available.", "OK");
                     return;
                 }
-                IFolder folder = FileSystem.Current.LocalStorage;
                 var imgFile = await Plugin.Media.CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions()
                 {
                     PhotoSize = Plugin.Media.Abstractions.PhotoSize.Full,
