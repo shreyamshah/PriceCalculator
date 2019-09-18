@@ -72,11 +72,12 @@ namespace PriceCalculator.ViewModels
             set
             {
                 SetProperty(ref position, value);
-                //if (Categories != null && Categories.Count > 0)
-                //{
-                    //ProductsList = new ObservableCollection<Product>();
-                    //GetAllProduct(0);
-                //}
+                if (Categories != null && Categories.Count > 0)
+                {
+                    hasMore = true;
+                    ProductsList = new ObservableCollection<Product>();
+                    GetAllProduct(0);
+                }
             }
         }
 
@@ -131,6 +132,7 @@ namespace PriceCalculator.ViewModels
                                 p.ImgName = imgPath + "/" + p.ImgName;
                         });
                         temp.AddRange(list);
+                        temp = temp.Distinct().ToList();
                         ProductsList = new ObservableCollection<Product>(temp);
                         tempList = ProductsList;
                         SearchProduct();

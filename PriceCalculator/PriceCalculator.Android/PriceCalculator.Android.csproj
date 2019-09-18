@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\priceCalculator.sqlite" />
+    <GoogleServicesJson Include="google-services.json" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>

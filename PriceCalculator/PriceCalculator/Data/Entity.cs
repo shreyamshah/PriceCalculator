@@ -6,7 +6,7 @@ using SQLite;
 
 namespace PriceCalculator.Data
 {
-    public class Entity : BindableBase
+    public class Entity : BindableBase,IEquatable<Entity>
     {
 
         private string id;
@@ -15,6 +15,23 @@ namespace PriceCalculator.Data
         {
             get { return id; }
             set { SetProperty(ref id, value); }
+        }
+
+        public bool Equals(Entity other)
+        {
+            if (Object.ReferenceEquals(other, null)) return false;
+
+            //Check whether the compared object references the same data. 
+            if (Object.ReferenceEquals(this, other)) return true;
+
+            //Check whether the products' properties are equal. 
+            return Id.Equals(other.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashProductName = Id == null ? 0 : Id.GetHashCode();
+            return hashProductName;
         }
     }
 }
